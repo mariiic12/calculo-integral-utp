@@ -33,7 +33,7 @@ Este proyecto es la **Fase 1** de un proyecto semestral colaborativo. La platafo
 | 5 | Integral Definida y Área | ✅ Completo |
 | 6 | Integración Directa | ✅ Completo |
 
-### Fase 2 - Parcial 2 (Próximamente)
+### Fase 2 - (Próximamente)
 
 | # | Módulo | Estado |
 |---|--------|--------|
@@ -42,7 +42,7 @@ Este proyecto es la **Fase 1** de un proyecto semestral colaborativo. La platafo
 | 9 | Logarítmicas | 🚧 Próximamente |
 | 10 | Trigonométricas | 🚧 Próximamente |
 
-### Fase 3 - Proyecto Final (Próximamente)
+### Fase 3 - (Próximamente)
 
 | # | Módulo | Estado |
 |---|--------|--------|
