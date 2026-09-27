@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 2: Regla del Trapecio | Cálculo Integral UTP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/modules.css">
+</head>
+<body>
+
+    <div class="bg-animated"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <i class="bi bi-calculator-fill fs-4 text-primary"></i>
+                <span class="fw-bold">Matemáticas II</span>
+            </a>
+        </div>
+    </nav>
+
+    <header class="module-header">
+        <div class="container">
+            <a href="../index.html" class="back-link"><i class="bi bi-arrow-left"></i> Volver al Inicio</a>
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="module-badge bg-primary">02</div>
+                <div>
+                    <h1 class="mb-0">Regla del Trapecio</h1>
+                    <p class="module-subtitle mb-0">Aproximación mediante trapecios sobre la curva</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5">
+
+        <!-- TEORÍA -->
+        <section class="content-section" data-aos="fade-up">
+            <h2><i class="bi bi-book text-primary me-2"></i>Fundamento Teórico</h2>
+            <p class="text-white-50">
+                La <strong class="text-white">Regla del Trapecio</strong> aproxima el área bajo una curva 
+                dividiendo el intervalo en subintervalos y conectando los puntos de la función con líneas 
+                rectas, formando trapecios. Es más precisa que las sumas de Riemann porque aprovecha la 
+                pendiente de la función en cada subintervalo.
+            </p>
+
+            <div class="formula-box">
+                <h3>Fórmula General</h3>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-white">Ancho de cada subintervalo:</strong></p>
+                    <div class="katex-formula" data-formula="\Delta x = \frac{b - a}{n}"></div>
+                </div>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-white">Regla del Trapecio Compuesta:</strong></p>
+                    <div class="katex-formula" data-formula="T_n = \frac{\Delta x}{2}\left[f(x_0) + 2\sum_{i=1}^{n-1}f(x_i) + f(x_n)\right]"></div>
+                </div>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-white">Error de aproximación:</strong></p>
+                    <div class="katex-formula" data-formula="E_T = -\frac{(b-a)^3}{12n^2}f''(\xi), \quad \xi \in [a,b]"></div>
+                </div>
+            </div>
+
+            <div class="alert alert-info border-0 bg-primary bg-opacity-10" role="alert">
+                <i class="bi bi-lightbulb-fill me-2"></i>
+                <strong class="text-white">Justificación geométrica:</strong>
+                <span class="text-white-50"> Cada trapecio tiene área = (base mayor + base menor)/2 × altura. 
+                Al sumar todos los trapecios obtenemos la fórmula anterior.</span>
+            </div>
+        </section>
+
+        <!-- VISUALIZADOR -->
+        <section class="content-section" data-aos="fade-up">
+            <h2><i class="bi bi-graph-up text-info me-2"></i>Visualizador Interactivo</h2>
+            <p class="text-white-50">Ajusta los parámetros y observa cómo los trapecios aproximan el área bajo la curva.</p>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label>Función f(x)</label>
+                    <select id="function">
+                        <option value="x2">f(x) = x²</option>
+                        <option value="sqrt">f(x) = √x</option>
+                        <option value="sin">f(x) = sin(x)</option>
+                        <option value="exp">f(x) = eˣ</option>
+                        <option value="invx">f(x) = 1/x</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Límite inferior (a)</label>
+                    <input type="number" id="interval-a" value="0" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label>Límite superior (b)</label>
+                    <input type="number" id="interval-b" value="2" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label>Número de trapecios (n)</label>
+                    <input type="range" id="n-value" min="1" max="30" value="4">
+                    <div class="d-flex justify-content-between">
+                        <small class="text-white-50">1</small>
+                        <strong class="text-info" id="n-display">4</strong>
+                        <small class="text-white-50">30</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="plot-container" class="plot-container"></div>
+
+            <div class="result-box">
+                <h3><i class="bi bi-calculator me-2"></i>Resultados</h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-3 rounded bg-primary bg-opacity-10">
+                            <small class="text-white-50">Valor Aproximado (Tₙ)</small>
+                            <h4 class="text-info mb-0" id="approx-value">—</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded bg-success bg-opacity-10">
+                            <small class="text-white-50">Valor Exacto</small>
+                            <h4 class="text-success mb-0" id="exact-value">—</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded bg-warning bg-opacity-10">
+                            <small class="text-white-50">Error Relativo</small>
+                            <h4 class="text-warning mb-0" id="error-value">—</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EJEMPLOS -->
+        <section class="content-section" data-aos="fade-up">
+            <h2><i class="bi bi-journal-check text-success me-2"></i>Ejemplos Resueltos</h2>
+
+            <div class="example">
+                <h3>Ejemplo 1: Aproximar ∫₀² x² dx con n = 4</h3>
+                <div class="step">
+                    <h4>Paso 1: Calcular Δx</h4>
+                    <div class="katex-formula" data-formula="\Delta x = \frac{b - a}{n} = \frac{2 - 0}{4} = 0.5"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 2: Determinar los puntos xᵢ</h4>
+                    <div class="katex-formula" data-formula="x_0 = 0,\; x_1 = 0.5,\; x_2 = 1,\; x_3 = 1.5,\; x_4 = 2"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 3: Evaluar f(x) = x² en cada punto</h4>
+                    <div class="katex-formula" data-formula="f(0) = 0,\; f(0.5) = 0.25,\; f(1) = 1,\; f(1.5) = 2.25,\; f(2) = 4"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 4: Aplicar la fórmula del trapecio</h4>
+                    <div class="katex-formula" data-formula="T_4 = \frac{0.5}{2}\left[0 + 2(0.25 + 1 + 2.25) + 4\right]"></div>
+                    <div class="katex-formula" data-formula="T_4 = 0.25\left[0 + 2(3.5) + 4\right] = 0.25(11) = 2.75"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 5: Valor exacto y error</h4>
+                    <div class="katex-formula" data-formula="\int_0^2 x^2\,dx = \left[\frac{x^3}{3}\right]_0^2 = \frac{8}{3} \approx 2.667"></div>
+                    <div class="katex-formula" data-formula="\text{Error} = |2.75 - 2.667| = 0.083 \approx 3.13\%"></div>
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>Ejemplo 2: Usar T₅ para aproximar ∫₁³ (1/x) dx</h3>
+                <div class="step">
+                    <h4>Paso 1: Calcular Δx</h4>
+                    <div class="katex-formula" data-formula="\Delta x = \frac{3 - 1}{5} = 0.4"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 2: Puntos xᵢ</h4>
+                    <div class="katex-formula" data-formula="x_0=1,\; x_1=1.4,\; x_2=1.8,\; x_3=2.2,\; x_4=2.6,\; x_5=3"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 3: Evaluar f(x) = 1/x</h4>
+                    <div class="katex-formula" data-formula="f(1)=1,\; f(1.4)\approx 0.714,\; f(1.8)\approx 0.556,\; f(2.2)\approx 0.455,\; f(2.6)\approx 0.385,\; f(3)\approx 0.333"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 4: Aplicar la fórmula</h4>
+                    <div class="katex-formula" data-formula="T_5 = \frac{0.4}{2}\left[1 + 2(0.714 + 0.556 + 0.455 + 0.385) + 0.333\right]"></div>
+                    <div class="katex-formula" data-formula="T_5 = 0.2\left[1 + 2(2.11) + 0.333\right] = 0.2(5.553) \approx 1.111"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 5: Valor exacto</h4>
+                    <div class="katex-formula" data-formula="\int_1^3 \frac{1}{x}\,dx = \ln(3) \approx 1.099"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-custom mt-5 py-4">
+        <div class="container text-center">
+            <p class="text-white-50 small mb-0">© 2026 Universidad Tecnológica de Pereira · Cálculo Integral</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="../js/plotly-config.js"></script>
+    <script src="../js/modules/modulo2.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        if (typeof AOS !== 'undefined') AOS.init({ duration: 700, once: true, offset: 50 });
+    </script>
+</body>
+</html>

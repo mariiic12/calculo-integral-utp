@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 1: Sumas de Riemann</title>
+    <!-- Bootstrap 5 + Bootswatch Zephyr -->
+<link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/modules.css">
+</head>
+<body>
+    <header class="module-header">
+        <div class="container">
+            <a href="../index.html" class="back-link">← Volver al Inicio</a>
+            <h1>Módulo 1: Sumas de Riemann</h1>
+            <p class="module-subtitle">Aproximación del área bajo la curva</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="theory-section">
+            <h2>📚 Fundamento Teórico</h2>
+            <p>Las sumas de Riemann son un método para aproximar el área bajo una curva dividiendo el intervalo en subintervalos y construyendo rectángulos.</p>
+            
+            <div class="formula-box">
+                <h3>Fórmulas</h3>
+                <div class="formula">
+                    <p><strong>Ancho de cada subintervalo:</strong></p>
+                    <div class="katex-formula" data-formula="\Delta x = \frac{b - a}{n}"></div>
+                </div>
+                
+                <div class="formula">
+                    <p><strong>Suma Izquierda:</strong></p>
+                    <div class="katex-formula" data-formula="L_n = \sum_{i=0}^{n-1} f(x_i) \Delta x"></div>
+                </div>
+                
+                <div class="formula">
+                    <p><strong>Suma Derecha:</strong></p>
+                    <div class="katex-formula" data-formula="R_n = \sum_{i=1}^{n} f(x_i) \Delta x"></div>
+                </div>
+                
+                <div class="formula">
+                    <p><strong>Punto Medio:</strong></p>
+                    <div class="katex-formula" data-formula="M_n = \sum_{i=1}^{n} f(\bar{x}_i) \Delta x, \quad \bar{x}_i = \frac{x_{i-1} + x_i}{2}"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="interactive-section">
+            <h2>🎯 Visualizador Interactivo</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="function">Función:</label>
+                    <select id="function">
+                        <option value="x2">f(x) = x²</option>
+                        <option value="sqrt">f(x) = √x</option>
+                        <option value="sin">f(x) = sin(x)</option>
+                        <option value="exp">f(x) = eˣ</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="interval-a">Intervalo [a, b]:</label>
+                    <input type="number" id="interval-a" value="0" step="0.1">
+                    <input type="number" id="interval-b" value="2" step="0.1">
+                </div>
+                
+                <div class="control-group">
+                    <label for="n-value">Número de subintervalos (n):</label>
+                    <input type="range" id="n-value" min="1" max="50" value="4">
+                    <span id="n-display">4</span>
+                </div>
+                
+                <div class="control-group">
+                    <label for="sum-type">Tipo de suma:</label>
+                    <select id="sum-type">
+                        <option value="left">Izquierda</option>
+                        <option value="right">Derecha</option>
+                        <option value="mid">Punto Medio</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="plot-container" class="plot-container"></div>
+            
+            <div class="result-box">
+                <h3>Resultado:</h3>
+                <p>Valor aproximado: <span id="approx-value" class="highlight">-</span></p>
+                <p>Valor exacto: <span id="exact-value" class="highlight">-</span></p>
+                <p>Error: <span id="error-value" class="highlight">-</span></p>
+            </div>
+        </section>
+
+        <section class="examples-section">
+            <h2>📝 Ejemplos Resueltos</h2>
+            
+            <div class="example">
+                <h3>Ejemplo 1: Calcular L₄, R₄ y M₄ para f(x) = x² en [0, 2]</h3>
+                <div class="step">
+                    <h4>Paso 1: Calcular Δx</h4>
+                    <div class="katex-formula" data-formula="\Delta x = \frac{2 - 0}{4} = 0.5"></div>
+                </div>
+                
+                <div class="step">
+                    <h4>Paso 2: Determinar los puntos</h4>
+                    <div class="katex-formula" data-formula="x_0 = 0, \quad x_1 = 0.5, \quad x_2 = 1, \quad x_3 = 1.5, \quad x_4 = 2"></div>
+                </div>
+                
+                <div class="step">
+                    <h4>Paso 3: Suma Izquierda (L₄)</h4>
+                    <div class="katex-formula" data-formula="L_4 = [f(0) + f(0.5) + f(1) + f(1.5)] \cdot 0.5"></div>
+                    <div class="katex-formula" data-formula="L_4 = [0 + 0.25 + 1 + 2.25] \cdot 0.5 = 1.75"></div>
+                </div>
+                
+                <div class="step">
+                    <h4>Paso 4: Suma Derecha (R₄)</h4>
+                    <div class="katex-formula" data-formula="R_4 = [f(0.5) + f(1) + f(1.5) + f(2)] \cdot 0.5"></div>
+                    <div class="katex-formula" data-formula="R_4 = [0.25 + 1 + 2.25 + 4] \cdot 0.5 = 3.75"></div>
+                </div>
+                
+                <div class="step">
+                    <h4>Paso 5: Punto Medio (M₄)</h4>
+                    <div class="katex-formula" data-formula="M_4 = [f(0.25) + f(0.75) + f(1.25) + f(1.75)] \cdot 0.5"></div>
+                    <div class="katex-formula" data-formula="M_4 = [0.0625 + 0.5625 + 1.5625 + 3.0625] \cdot 0.5 = 2.625"></div>
+                </div>
+                
+                <div class="step">
+                    <h4>Valor Exacto</h4>
+                    <div class="katex-formula" data-formula="\int_0^2 x^2 dx = \left[\frac{x^3}{3}\right]_0^2 = \frac{8}{3} \approx 2.667"></div>
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>Ejemplo 2: Aproximar ∫₁³ (1/x) dx usando L₅, R₅ y M₅</h3>
+                <div class="step">
+                    <h4>Paso 1: Calcular Δx</h4>
+                    <div class="katex-formula" data-formula="\Delta x = \frac{3 - 1}{5} = 0.4"></div>
+                </div>
+                
+                <div class="step">
+                    <h4>Paso 2: Puntos</h4>
+                    <div class="katex-formula" data-formula="x_0 = 1, \quad x_1 = 1.4, \quad x_2 = 1.8, \quad x_3 = 2.2, \quad x_4 = 2.6, \quad x_5 = 3"></div>
+                </div>
+                
+                <div class="step">
+                    <h4>Paso 3: Calcular las sumas</h4>
+                    <div class="katex-formula" data-formula="L_5 = \left[\frac{1}{1} + \frac{1}{1.4} + \frac{1}{1.8} + \frac{1}{2.2} + \frac{1}{2.6}\right] \cdot 0.4 \approx 1.247"></div>
+                    <div class="katex-formula" data-formula="R_5 = \left[\frac{1}{1.4} + \frac{1}{1.8} + \frac{1}{2.2} + \frac{1}{2.6} + \frac{1}{3}\right] \cdot 0.4 \approx 0.980"></div>
+                    <div class="katex-formula" data-formula="M_5 \approx 1.099"></div>
+                </div>
+                
+                <div class="step">
+                    <h4>Valor Exacto</h4>
+                    <div class="katex-formula" data-formula="\int_1^3 \frac{1}{x} dx = \ln(3) - \ln(1) = \ln(3) \approx 1.099"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Universidad Tecnológica de Pereira</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="../js/plotly-config.js"></script>
+    <script src="../js/modules/modulo1.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="../js/plotly-config.js"></script>
+<script src="../js/main.js"></script>
+<script>
+    AOS.init({ duration: 700, once: true, offset: 50 });
+</script>
+</body>
+</html>

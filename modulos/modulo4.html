@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 4: Regla de Simpson | Cálculo Integral UTP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/modules.css">
+</head>
+<body>
+
+    <div class="bg-animated"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <i class="bi bi-calculator-fill fs-4 text-primary"></i>
+                <span class="fw-bold">Matemáticas II </span>
+            </a>
+        </div>
+    </nav>
+
+    <header class="module-header">
+        <div class="container">
+            <a href="../index.html" class="back-link"><i class="bi bi-arrow-left"></i> Volver al Inicio</a>
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="module-badge bg-success">04</div>
+                <div>
+                    <h1 class="mb-0">Regla de Simpson</h1>
+                    <p class="module-subtitle mb-0">Aproximación parabólica de alta precisión</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5">
+
+        <section class="content-section" data-aos="fade-up">
+            <h2><i class="bi bi-book text-primary me-2"></i>Fundamento Teórico</h2>
+            <p class="text-white-50">
+                La <strong class="text-white">Regla de Simpson 1/3</strong> es el método más preciso de los métodos 
+                numéricos básicos. Aproxima la función con <em class="text-success">parábolas</em> (polinomios de 
+                grado 2) en lugar de líneas rectas, lo que la hace exacta para polinomios de hasta grado 3.
+            </p>
+
+            <div class="formula-box">
+                <h3>Fórmula General</h3>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-warning">⚠️ Condición: n debe ser PAR</strong></p>
+                    <div class="katex-formula" data-formula="n \in \{2, 4, 6, 8, \ldots\}"></div>
+                </div>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-white">Regla de Simpson 1/3:</strong></p>
+                    <div class="katex-formula" data-formula="S_n = \frac{\Delta x}{3}\left[f(x_0) + 4\sum_{i\,\text{impar}}f(x_i) + 2\sum_{i\,\text{par}}f(x_i) + f(x_n)\right]"></div>
+                </div>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-white">Error de aproximación:</strong></p>
+                    <div class="katex-formula" data-formula="E_S = -\frac{(b-a)^5}{180n^4}f^{(4)}(\xi)"></div>
+                </div>
+            </div>
+
+            <div class="alert alert-success border-0 bg-success bg-opacity-10">
+                <i class="bi bi-trophy-fill me-2"></i>
+                <strong class="text-white">¿Por qué es tan precisa?</strong>
+                <span class="text-white-50"> Simpson es equivalente a (2·PuntoMedio + Trapecio)/3. 
+                El error disminuye con n⁴ (no con n² como los otros métodos).</span>
+            </div>
+        </section>
+
+        <section class="content-section" data-aos="fade-up">
+            <h2><i class="bi bi-graph-up text-info me-2"></i>Visualizador Interactivo</h2>
+            <p class="text-white-50">Observa cómo las parábolas se ajustan a la curva. <strong class="text-warning">n debe ser par.</strong></p>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label>Función f(x)</label>
+                    <select id="function">
+                        <option value="x2">f(x) = x²</option>
+                        <option value="sqrt">f(x) = √x</option>
+                        <option value="sin">f(x) = sin(x)</option>
+                        <option value="exp">f(x) = eˣ</option>
+                        <option value="invx">f(x) = 1/x</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Límite inferior (a)</label>
+                    <input type="number" id="interval-a" value="0" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label>Límite superior (b)</label>
+                    <input type="number" id="interval-b" value="2" step="0.1">
+                </div>
+                <div class="control-group">
+                    <label>Número de subintervalos (n PAR)</label>
+                    <input type="range" id="n-value" min="2" max="30" step="2" value="4">
+                    <div class="d-flex justify-content-between">
+                        <small class="text-white-50">2</small>
+                        <strong class="text-success" id="n-display">4</strong>
+                        <small class="text-white-50">30</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="plot-container" class="plot-container"></div>
+
+            <div class="result-box">
+                <h3><i class="bi bi-calculator me-2"></i>Resultados</h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-3 rounded bg-primary bg-opacity-10">
+                            <small class="text-white-50">Valor Aproximado (Sₙ)</small>
+                            <h4 class="text-info mb-0" id="approx-value">—</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded bg-success bg-opacity-10">
+                            <small class="text-white-50">Valor Exacto</small>
+                            <h4 class="text-success mb-0" id="exact-value">—</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded bg-warning bg-opacity-10">
+                            <small class="text-white-50">Error Relativo</small>
+                            <h4 class="text-warning mb-0" id="error-value">—</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section" data-aos="fade-up">
+            <h2><i class="bi bi-journal-check text-success me-2"></i>Ejemplos Resueltos</h2>
+
+            <div class="example">
+                <h3>Ejemplo 1: Aproximar ∫₀² x² dx con n = 4</h3>
+                <div class="step">
+                    <h4>Paso 1: Calcular Δx</h4>
+                    <div class="katex-formula" data-formula="\Delta x = \frac{2 - 0}{4} = 0.5"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 2: Puntos y valores de f(x) = x²</h4>
+                    <div class="katex-formula" data-formula="x_0=0,\; x_1=0.5,\; x_2=1,\; x_3=1.5,\; x_4=2"></div>
+                    <div class="katex-formula" data-formula="f(x_i) = \{0,\; 0.25,\; 1,\; 2.25,\; 4\}"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 3: Aplicar la fórmula de Simpson</h4>
+                    <div class="katex-formula" data-formula="S_4 = \frac{0.5}{3}\left[0 + 4(0.25 + 2.25) + 2(1) + 4\right]"></div>
+                    <div class="katex-formula" data-formula="S_4 = \frac{0.5}{3}\left[0 + 10 + 2 + 4\right] = \frac{0.5}{3}(16) = \frac{8}{3} \approx 2.667"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 4: ¡Resultado exacto!</h4>
+                    <div class="katex-formula" data-formula="\int_0^2 x^2\,dx = \frac{8}{3} \quad\Rightarrow\quad \text{Error} = 0\%"></div>
+                    <p class="text-info small mb-0 mt-2">Simpson es exacto para polinomios de grado ≤ 3.</p>
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>Ejemplo 2: Usar S₄ para aproximar ∫₁³ (1/x) dx</h3>
+                <div class="step">
+                    <h4>Paso 1: Calcular Δx</h4>
+                    <div class="katex-formula" data-formula="\Delta x = \frac{3 - 1}{4} = 0.5"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 2: Puntos y valores</h4>
+                    <div class="katex-formula" data-formula="x_i = \{1,\; 1.5,\; 2,\; 2.5,\; 3\}"></div>
+                    <div class="katex-formula" data-formula="f(x_i) = \left\{1,\; \frac{2}{3},\; \frac{1}{2},\; \frac{2}{5},\; \frac{1}{3}\right\}"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 3: Aplicar Simpson</h4>
+                    <div class="katex-formula" data-formula="S_4 = \frac{0.5}{3}\left[1 + 4\left(\frac{2}{3} + \frac{2}{5}\right) + 2\left(\frac{1}{2}\right) + \frac{1}{3}\right]"></div>
+                    <div class="katex-formula" data-formula="S_4 = \frac{0.5}{3}\left[1 + 4(1.067) + 1 + 0.333\right] \approx \frac{0.5}{3}(6.6) \approx 1.100"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 4: Comparación</h4>
+                    <div class="katex-formula" data-formula="\int_1^3 \frac{1}{x}\,dx = \ln(3) \approx 1.099 \quad\Rightarrow\quad \text{Error} \approx 0.09\%"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-custom mt-5 py-4">
+        <div class="container text-center">
+            <p class="text-white-50 small mb-0">© 2026 Universidad Tecnológica de Pereira · Cálculo Integral</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="../js/plotly-config.js"></script>
+    <script src="../js/modules/modulo4.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        if (typeof AOS !== 'undefined') AOS.init({ duration: 700, once: true, offset: 50 });
+    </script>
+</body>
+</html>

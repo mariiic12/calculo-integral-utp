@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 6: Integración Directa | Cálculo Integral UTP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/modules.css">
+</head>
+<body>
+
+    <div class="bg-animated"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <i class="bi bi-calculator-fill fs-4 text-primary"></i>
+                <span class="fw-bold">Matemáticas</span>
+            </a>
+        </div>
+    </nav>
+
+    <header class="module-header">
+        <div class="container">
+            <a href="../index.html" class="back-link"><i class="bi bi-arrow-left"></i> Volver al Inicio</a>
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="module-badge bg-danger">06</div>
+                <div>
+                    <h1 class="mb-0">Integración Directa</h1>
+                    <p class="module-subtitle mb-0">Fórmulas básicas de antiderivadas</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5">
+
+        <section class="content-section" data-aos="fade-up">
+            <h2><i class="bi bi-book text-primary me-2"></i>Fundamento Teórico</h2>
+            <p class="text-white-50">
+                La <strong class="text-white">Integración Directa</strong> aplica las fórmulas básicas de 
+                antiderivadas combinadas con las propiedades de linealidad de la integral: 
+                <em class="text-info">constante por función</em> y <em class="text-info">suma/resta de funciones</em>.
+            </p>
+
+            <div class="formula-box">
+                <h3>Fórmulas Básicas</h3>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-white">Potencia:</strong></p>
+                    <div class="katex-formula" data-formula="\int x^n\,dx = \frac{x^{n+1}}{n+1} + C, \quad n \neq -1"></div>
+                </div>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-white">Caso especial n = −1:</strong></p>
+                    <div class="katex-formula" data-formula="\int \frac{dx}{x} = \ln|x| + C"></div>
+                </div>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-white">Constante:</strong></p>
+                    <div class="katex-formula" data-formula="\int k\,dx = kx + C"></div>
+                </div>
+                <div class="formula">
+                    <p class="text-white-50 small mb-2"><strong class="text-white">Linealidad:</strong></p>
+                    <div class="katex-formula" data-formula="\int [\alpha f(x) \pm \beta g(x)]\,dx = \alpha\int f(x)\,dx \pm \beta\int g(x)\,dx"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section" data-aos="fade-up">
+            <h2><i class="bi bi-graph-up text-info me-2"></i>Visualizador: f(x) y su Antiderivada F(x)</h2>
+            <p class="text-white-50">Selecciona una función para ver su gráfica junto con la de su antiderivada.</p>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label>Función f(x)</label>
+                    <select id="function">
+                        <option value="poly1">f(x) = (ax + by)² → expandida</option>
+                        <option value="poly2">f(x) = x^(3/2) − 9/√x</option>
+                        <option value="poly3">f(x) = x + 4√x − 4/x</option>
+                        <option value="poly4">f(x) = x − 1 − 1/x</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Rango de visualización</label>
+                    <input type="range" id="range-value" min="1" max="5" value="3" step="0.5">
+                    <div class="d-flex justify-content-between">
+                        <small class="text-white-50">[−1, 1]</small>
+                        <strong class="text-info" id="range-display">[−3, 3]</strong>
+                        <small class="text-white-50">[−5, 5]</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="plot-container" class="plot-container"></div>
+
+            <div class="result-box">
+                <h3><i class="bi bi-pencil-square me-2"></i>Antiderivada</h3>
+                <div id="antiderivative-display" class="katex-formula"></div>
+            </div>
+        </section>
+
+        <section class="content-section" data-aos="fade-up">
+            <h2><i class="bi bi-journal-check text-success me-2"></i>Ejemplos Resueltos</h2>
+
+            <div class="example">
+                <h3>Ejemplo 1: ∫(ax + by)² dx</h3>
+                <div class="step">
+                    <h4>Paso 1: Expandir el binomio al cuadrado</h4>
+                    <div class="katex-formula" data-formula="(ax + by)^2 = a^2x^2 + 2abxy + b^2y^2"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 2: Integrar término a término (y es constante respecto a x)</h4>
+                    <div class="katex-formula" data-formula="\int (a^2x^2 + 2abxy + b^2y^2)\,dx"></div>
+                    <div class="katex-formula" data-formula="= a^2\frac{x^3}{3} + 2aby\frac{x^2}{2} + b^2y^2 x + C"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 3: Simplificar</h4>
+                    <div class="katex-formula" data-formula="\boxed{\frac{a^2 x^3}{3} + abx^2 y + b^2 x y^2 + C}"></div>
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>Ejemplo 2: ∫(x^(3/2) − 9/√x) dx</h3>
+                <div class="step">
+                    <h4>Paso 1: Reescribir con exponentes</h4>
+                    <div class="katex-formula" data-formula="\int \left(x^{3/2} - 9x^{-1/2}\right)\,dx"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 2: Aplicar la regla de la potencia a cada término</h4>
+                    <div class="katex-formula" data-formula="\int x^{3/2}\,dx = \frac{x^{5/2}}{5/2} = \frac{2}{5}x^{5/2}"></div>
+                    <div class="katex-formula" data-formula="\int 9x^{-1/2}\,dx = 9\cdot\frac{x^{1/2}}{1/2} = 18x^{1/2}"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 3: Resultado</h4>
+                    <div class="katex-formula" data-formula="\boxed{\frac{2}{5}x^{5/2} - 18\sqrt{x} + C}"></div>
+                </div>
+                <div class="step">
+                    <h4>Verificación por derivación</h4>
+                    <div class="katex-formula" data-formula="\frac{d}{dx}\left[\frac{2}{5}x^{5/2} - 18x^{1/2}\right] = x^{3/2} - 9x^{-1/2} \;\checkmark"></div>
+                </div>
+            </div>
+
+            <div class="example">
+                <h3>Ejemplo 3: ∫(x + 4√x − 4/x) dx</h3>
+                <div class="step">
+                    <h4>Paso 1: Reescribir</h4>
+                    <div class="katex-formula" data-formula="\int \left(x + 4x^{1/2} - \frac{4}{x}\right)\,dx"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 2: Integrar término a término</h4>
+                    <div class="katex-formula" data-formula="\int x\,dx = \frac{x^2}{2}"></div>
+                    <div class="katex-formula" data-formula="\int 4x^{1/2}\,dx = 4\cdot\frac{x^{3/2}}{3/2} = \frac{8}{3}x^{3/2}"></div>
+                    <div class="katex-formula" data-formula="\int \frac{4}{x}\,dx = 4\ln|x|"></div>
+                </div>
+                <div class="step">
+                    <h4>Paso 3: Resultado</h4>
+                    <div class="katex-formula" data-formula="\boxed{\frac{x^2}{2} + \frac{8}{3}x^{3/2} - 4\ln|x| + C}"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-custom mt-5 py-4">
+        <div class="container text-center">
+            <p class="text-white-50 small mb-0">© 2026 Universidad Tecnológica de Pereira · Cálculo Integral</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="../js/plotly-config.js"></script>
+    <script src="../js/modules/modulo6.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        if (typeof AOS !== 'undefined') AOS.init({ duration: 700, once: true, offset: 50 });
+    </script>
+</body>
+</html>

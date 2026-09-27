@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo Integral - Plataforma Interactiva | UTP</title>
+    
+    <!-- Bootstrap 5 + Bootswatch Zephyr -->
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    
+    <!-- AOS Animations -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Fondo animado -->
+    <div class="bg-animated"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <i class="bi bi-calculator-fill fs-4 text-primary"></i>
+                <span class="fw-bold">Matemáticas II</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#seccion-a"><i class="bi bi-1-circle me-1"></i>Métodos Numéricos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#seccion-b"><i class="bi bi-2-circle me-1"></i>Integración</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero-section position-relative overflow-hidden">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row justify-content-center text-center py-5">
+                <div class="col-lg-9">
+                    <span class="badge bg-primary bg-opacity-25 text-info rounded-pill px-3 py-2 mb-3" data-aos="fade-down">
+                        <i class="bi bi-circle-fill me-1 small-dot"></i>
+                        Plataforma Activa · 2026-II
+                    </span>
+                    <h1 class="display-3 fw-bold mb-3 text-white" data-aos="fade-up" data-aos-delay="100">
+                        Cálculo <span class="gradient-text">Integral</span>
+                    </h1>
+                    <p class="lead mb-3 text-white-50" data-aos="fade-up" data-aos-delay="200">
+                        Plataforma interactiva de visualización matemática y métodos de integración
+                    </p>
+                    <p class="text-white-50 small" data-aos="fade-up" data-aos-delay="300">
+                        <i class="bi bi-building me-1"></i>
+                        Universidad Tecnológica de Pereira · Tecnología en Desarrollo de Software
+                    </p>
+                    <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap" data-aos="fade-up" data-aos-delay="400">
+                        <a href="#seccion-a" class="btn btn-primary btn-lg px-4">
+                            <i class="bi bi-play-fill me-1"></i> Comenzar
+                        </a>
+                        <a href="https://github.com/TU-USUARIO/calculo-integral-utp" target="_blank" class="btn btn-outline-light btn-lg px-4">
+                            <i class="bi bi-github me-1"></i> Ver código
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- STATS -->
+    <section class="stats-bar py-4">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-6 col-md-3" data-aos="fade-up">
+                    <i class="bi bi-journal-code fs-2 text-primary"></i>
+                    <h3 class="fw-bold text-white mb-0 mt-2">14</h3>
+                    <small class="text-white-50">Módulos</small>
+                </div>
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+                    <i class="bi bi-graph-up fs-2 text-info"></i>
+                    <h3 class="fw-bold text-white mb-0 mt-2">6</h3>
+                    <small class="text-white-50">Visualizadores</small>
+                </div>
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+                    <i class="bi bi-calculator fs-2 text-success"></i>
+                    <h3 class="fw-bold text-white mb-0 mt-2">∞</h3>
+                    <small class="text-white-50">Ejemplos</small>
+                </div>
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+                    <i class="bi bi-phone fs-2 text-warning"></i>
+                    <h3 class="fw-bold text-white mb-0 mt-2">100%</h3>
+                    <small class="text-white-50">Responsive</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTENIDO -->
+    <main class="container py-5">
+
+        <!-- Intro -->
+        <section class="intro-card mb-5" data-aos="fade-up">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <h2 class="h3 fw-bold mb-3 text-white">
+                        <i class="bi bi-emoji-smile text-primary me-2"></i>
+                        Bienvenido a tu plataforma de estudio
+                    </h2>
+                    <p class="text-white-50 mb-0">
+                        Explora los métodos numéricos y técnicas de integración del cálculo integral 
+                        a través de visualizaciones interactivas, fórmulas renderizadas con KaTeX y 
+                        ejemplos resueltos paso a paso.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <div class="intro-icon-box">
+                        <i class="bi bi-mortarboard-fill"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN A -->
+        <section id="seccion-a" class="mb-5">
+            <div class="section-header d-flex align-items-center gap-3 mb-4" data-aos="fade-right">
+                <div class="section-icon bg-primary bg-opacity-25 text-primary">
+                    <i class="bi bi-rulers"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <h2 class="h3 fw-bold mb-0 text-white">Métodos Numéricos</h2>
+                    <small class="text-white-50">Sección A · Fase 1</small>
+                </div>
+                <span class="badge bg-primary bg-opacity-25 text-info">6 módulos</span>
+            </div>
+
+            <div class="row g-4">
+                <!-- Módulo 1 -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up">
+                    <a href="modulos/modulo1.html" class="module-card card h-100 border-0">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div class="module-badge bg-primary">01</div>
+                                <span class="badge bg-success bg-opacity-25 text-success">
+                                    <i class="bi bi-circle-fill small-dot me-1"></i>Disponible
+                                </span>
+                            </div>
+                            <h5 class="card-title fw-bold text-white">Sumas de Riemann</h5>
+                            <p class="card-text text-white-50 small">
+                                Aproximación del área mediante sumas izquierda, derecha y punto medio con visualización de convergencia.
+                            </p>
+                            <div class="d-flex gap-2 flex-wrap mt-3">
+                                <span class="tech-tag"><i class="bi bi-bar-chart"></i> Visual</span>
+                                <span class="tech-tag"><i class="bi bi-intersect"></i> Interactivo</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <span class="text-primary small fw-semibold">
+                                Explorar módulo <i class="bi bi-arrow-right ms-1"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Módulo 2 -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <a href="modulos/modulo2.html" class="module-card card h-100 border-0">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div class="module-badge bg-primary">02</div>
+                                <span class="badge bg-success bg-opacity-25 text-success">
+                                    <i class="bi bi-circle-fill small-dot me-1"></i>Disponible
+                                </span>
+                            </div>
+                            <h5 class="card-title fw-bold text-white">Regla del Trapecio</h5>
+                            <p class="card-text text-white-50 small">
+                                Aproximación mediante trapecios sobre la curva con justificación geométrica interactiva.
+                            </p>
+                            <div class="d-flex gap-2 flex-wrap mt-3">
+                                <span class="tech-tag"><i class="bi bi-bar-chart"></i> Visual</span>
+                                <span class="tech-tag"><i class="bi bi-intersect"></i> Interactivo</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <span class="text-primary small fw-semibold">
+                                Explorar módulo <i class="bi bi-arrow-right ms-1"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Módulo 3 -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <a href="modulos/modulo3.html" class="module-card card h-100 border-0">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div class="module-badge bg-primary">03</div>
+                                <span class="badge bg-success bg-opacity-25 text-success">
+                                    <i class="bi bi-circle-fill small-dot me-1"></i>Disponible
+                                </span>
+                            </div>
+                            <h5 class="card-title fw-bold text-white">Regla del Punto Medio</h5>
+                            <p class="card-text text-white-50 small">
+                                Rectángulos de punto medio con comparación de error frente a otros métodos.
+                            </p>
+                            <div class="d-flex gap-2 flex-wrap mt-3">
+                                <span class="tech-tag"><i class="bi bi-bar-chart"></i> Visual</span>
+                                <span class="tech-tag"><i class="bi bi-intersect"></i> Interactivo</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <span class="text-primary small fw-semibold">
+                                Explorar módulo <i class="bi bi-arrow-right ms-1"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Módulo 4 -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up">
+                    <a href="modulos/modulo4.html" class="module-card card h-100 border-0">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div class="module-badge bg-primary">04</div>
+                                <span class="badge bg-success bg-opacity-25 text-success">
+                                    <i class="bi bi-circle-fill small-dot me-1"></i>Disponible
+                                </span>
+                            </div>
+                            <h5 class="card-title fw-bold text-white">Regla de Simpson</h5>
+                            <p class="card-text text-white-50 small">
+                                Aproximación parabólica con condición de n par y análisis de precisión.
+                            </p>
+                            <div class="d-flex gap-2 flex-wrap mt-3">
+                                <span class="tech-tag"><i class="bi bi-bar-chart"></i> Visual</span>
+                                <span class="tech-tag"><i class="bi bi-intersect"></i> Interactivo</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <span class="text-primary small fw-semibold">
+                                Explorar módulo <i class="bi bi-arrow-right ms-1"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Módulo 5 -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <a href="modulos/modulo5.html" class="module-card card h-100 border-0">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div class="module-badge bg-primary">05</div>
+                                <span class="badge bg-success bg-opacity-25 text-success">
+                                    <i class="bi bi-circle-fill small-dot me-1"></i>Disponible
+                                </span>
+                            </div>
+                            <h5 class="card-title fw-bold text-white">Integral Definida y Área</h5>
+                            <p class="card-text text-white-50 small">
+                                Teorema Fundamental del Cálculo, área bajo la curva y entre curvas con límites ajustables.
+                            </p>
+                            <div class="d-flex gap-2 flex-wrap mt-3">
+                                <span class="tech-tag"><i class="bi bi-bar-chart"></i> Visual</span>
+                                <span class="tech-tag"><i class="bi bi-intersect"></i> Interactivo</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <span class="text-primary small fw-semibold">
+                                Explorar módulo <i class="bi bi-arrow-right ms-1"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Módulo 6 -->
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <a href="modulos/modulo6.html" class="module-card card h-100 border-0">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div class="module-badge bg-primary">06</div>
+                                <span class="badge bg-success bg-opacity-25 text-success">
+                                    <i class="bi bi-circle-fill small-dot me-1"></i>Disponible
+                                </span>
+                            </div>
+                            <h5 class="card-title fw-bold text-white">Integración Directa</h5>
+                            <p class="card-text text-white-50 small">
+                                Fórmulas básicas de integración con gráficas de f(x) y su antiderivada F(x).
+                            </p>
+                            <div class="d-flex gap-2 flex-wrap mt-3">
+                                <span class="tech-tag"><i class="bi bi-bar-chart"></i> Visual</span>
+                                <span class="tech-tag"><i class="bi bi-list-check"></i> Ejemplos</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <span class="text-primary small fw-semibold">
+                                Explorar módulo <i class="bi bi-arrow-right ms-1"></i>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN B -->
+<!-- SECCIÓN B -->
+<section id="seccion-b" class="mb-5">
+    <div class="section-header d-flex align-items-center gap-3 mb-4" data-aos="fade-right">
+        <div class="section-icon bg-info bg-opacity-25 text-info">
+            <i class="bi bi-function"></i>
+        </div>
+        <div class="flex-grow-1">
+            <h2 class="h3 fw-bold mb-0 text-white">Métodos de Integración</h2>
+            <small class="text-white-50">Sección B · Fases 2 y 3</small>
+        </div>
+        <span class="badge bg-warning bg-opacity-25 text-warning">8 módulos</span>
+    </div>
+
+    <div class="row g-4">
+        <!-- Módulo 7 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-up">
+            <a href="modulos/modulo7.html" class="module-card-placeholder card h-100 border-0 text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <div class="module-badge bg-secondary mx-auto mb-3">07</div>
+                    <h6 class="fw-bold text-white">Sustitución / Potencias</h6>
+                    <p class="text-white-50 small mb-2">Cambio de variable</p>
+                    <span class="badge bg-warning bg-opacity-25 text-warning"><i class="bi bi-clock me-1"></i>Fase 2</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Módulo 8 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="50">
+            <a href="modulos/modulo8.html" class="module-card-placeholder card h-100 border-0 text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <div class="module-badge bg-secondary mx-auto mb-3">08</div>
+                    <h6 class="fw-bold text-white">Exponenciales</h6>
+                    <p class="text-white-50 small mb-2">Funciones eˣ y bases</p>
+                    <span class="badge bg-warning bg-opacity-25 text-warning"><i class="bi bi-clock me-1"></i>Fase 2</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Módulo 9 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+            <a href="modulos/modulo9.html" class="module-card-placeholder card h-100 border-0 text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <div class="module-badge bg-secondary mx-auto mb-3">09</div>
+                    <h6 class="fw-bold text-white">Logarítmicas</h6>
+                    <p class="text-white-50 small mb-2">Logaritmo natural</p>
+                    <span class="badge bg-warning bg-opacity-25 text-warning"><i class="bi bi-clock me-1"></i>Fase 2</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Módulo 10 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="150">
+            <a href="modulos/modulo10.html" class="module-card-placeholder card h-100 border-0 text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <div class="module-badge bg-secondary mx-auto mb-3">10</div>
+                    <h6 class="fw-bold text-white">Trigonométricas</h6>
+                    <p class="text-white-50 small mb-2">sen, cos, tan y potencias</p>
+                    <span class="badge bg-warning bg-opacity-25 text-warning"><i class="bi bi-clock me-1"></i>Fase 2</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Módulo 11 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-up">
+            <a href="modulos/modulo11.html" class="module-card-placeholder card h-100 border-0 text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <div class="module-badge bg-secondary mx-auto mb-3">11</div>
+                    <h6 class="fw-bold text-white">Trig. Inversas</h6>
+                    <p class="text-white-50 small mb-2">arcsin, arctan, arcsec</p>
+                    <span class="badge bg-danger bg-opacity-25 text-danger"><i class="bi bi-clock me-1"></i>Fase 3</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Módulo 12 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="50">
+            <a href="modulos/modulo12.html" class="module-card-placeholder card h-100 border-0 text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <div class="module-badge bg-secondary mx-auto mb-3">12</div>
+                    <h6 class="fw-bold text-white">Hiperbólicas Inv.</h6>
+                    <p class="text-white-50 small mb-2">Formas √(u²±a²)</p>
+                    <span class="badge bg-danger bg-opacity-25 text-danger"><i class="bi bi-clock me-1"></i>Fase 3</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Módulo 13 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+            <a href="modulos/modulo13.html" class="module-card-placeholder card h-100 border-0 text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <div class="module-badge bg-secondary mx-auto mb-3">13</div>
+                    <h6 class="fw-bold text-white">Trinomio ax²+bx+c</h6>
+                    <p class="text-white-50 small mb-2">Completar cuadrado</p>
+                    <span class="badge bg-danger bg-opacity-25 text-danger"><i class="bi bi-clock me-1"></i>Fase 3</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Módulo 14 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="150">
+            <a href="modulos/modulo14.html" class="module-card-placeholder card h-100 border-0 text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <div class="module-badge bg-secondary mx-auto mb-3">14</div>
+                    <h6 class="fw-bold text-white">Por Partes</h6>
+                    <p class="text-white-50 small mb-2">Método ∫u·dv / LIATE</p>
+                    <span class="badge bg-danger bg-opacity-25 text-danger"><i class="bi bi-clock me-1"></i>Fase 3</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+    <!-- FOOTER -->
+    <footer class="footer-custom mt-5 py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3 text-white">
+                        <i class="bi bi-calculator-fill text-primary me-2"></i>
+                        Cálculo Integral · UTP
+                    </h5>
+                    <p class="text-white-50 small mb-0">
+                        Plataforma educativa desarrollada como parte del parcial del curso de Matemáticas II.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Tecnologías</h6>
+                    <ul class="list-unstyled small">
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>HTML5 / CSS3</li>
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>Bootstrap 5</li>
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>JavaScript ES6+</li>
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>Plotly.js · KaTeX</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Enlaces</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#seccion-a" class="text-decoration-none text-white-50">Métodos Numéricos</a></li>
+                        <li><a href="#seccion-b" class="text-decoration-none text-white-50">Integración</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 opacity-25">
+            <div class="text-center text-white-50 small">
+                <p class="mb-0">© 2026 Universidad Tecnológica de Pereira · Departamento de Matemáticas</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 700,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 50
+            });
+        }
+    </script>
+</body>
+</html>
