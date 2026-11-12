@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 18: Integrales Irracionales | Cálculo Integral UTP</title>
+
+    <!-- Bootstrap 5 + Bootswatch Zephyr -->
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- KaTeX: carga síncrona, SIN auto-render (renderizado manual en el JS) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .formula-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--bs-info);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        .step-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .step-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--bs-info);
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            background: var(--bs-info);
+            color: #000;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        /* ---- Sistema único de fórmulas ---- */
+        .tex-block {
+            color: #fff;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.35rem 0.15rem;
+        }
+        .tex-block .katex-display { margin: 0.35rem 0; }
+        .tex-block .katex { font-size: 1.02em; }
+        .tex-block::-webkit-scrollbar { height: 6px; }
+        .tex-block::-webkit-scrollbar-track { background: rgba(13, 202, 240, 0.08); border-radius: 4px; }
+        .tex-block::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #0dcaf0, #6f42c1); border-radius: 4px; }
+        /* ---- Visualizador ---- */
+        #plot-area {
+            width: 100%;
+            height: 470px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(13, 202, 240, 0.15);
+            border-radius: 0.75rem;
+        }
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.65);
+            margin-bottom: 0.25rem;
+        }
+        .control-value {
+            font-weight: 700;
+            color: #0dcaf0;
+            background: rgba(13, 202, 240, 0.12);
+            border-radius: 0.4rem;
+            padding: 0.05rem 0.5rem;
+            font-variant-numeric: tabular-nums;
+        }
+        .form-range { accent-color: #0dcaf0; }
+        .form-range::-webkit-slider-thumb { background: #0dcaf0; box-shadow: 0 0 8px rgba(13, 202, 240, 0.6); }
+        .form-range::-moz-range-thumb { background: #0dcaf0; border: none; box-shadow: 0 0 8px rgba(13, 202, 240, 0.6); }
+        .form-switch .form-check-input, .form-check-input { cursor: pointer; }
+        .form-switch .form-check-input:checked, .form-check-input:checked { background-color: #0dcaf0; border-color: #0dcaf0; }
+        .form-check-input:focus { border-color: #0dcaf0; box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.2); }
+        .form-check-label { font-size: 0.82rem; color: rgba(255, 255, 255, 0.75); cursor: pointer; }
+        .case-option {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 0.6rem;
+            padding: 0.55rem 0.5rem;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            height: 100%;
+        }
+        .case-option:hover { border-color: rgba(13, 202, 240, 0.5); }
+        .case-option.active { border-color: #0dcaf0; background: rgba(13, 202, 240, 0.12); }
+        .stat-chip {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.6rem;
+            padding: 0.7rem 0.9rem;
+            text-align: center;
+            height: 100%;
+        }
+        .stat-chip small { display: block; color: rgba(255, 255, 255, 0.55); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-chip strong { font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+        .divider-soft { border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 1rem 0; }
+        .table-dark-soft { --bs-table-bg: transparent; --bs-table-color: rgba(255,255,255,0.8); --bs-table-border-color: rgba(255,255,255,0.1); }
+        .hint-box {
+            background: rgba(52, 211, 153, 0.08);
+            border: 1px dashed rgba(52, 211, 153, 0.45);
+            border-radius: 0.6rem;
+            padding: 0.7rem 0.9rem;
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.85);
+            min-height: 62px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animated"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <i class="bi bi-arrow-left-circle fs-4 text-primary"></i>
+                <span class="fw-bold">Volver al Inicio</span>
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-info bg-opacity-25 text-info px-3 py-2">Módulo 18</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero-section position-relative overflow-hidden py-5">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+                    <span class="badge bg-info bg-opacity-25 text-info rounded-pill px-3 py-2 mb-3" data-aos="fade-down">
+                        <i class="bi bi-circle-fill me-1 small-dot"></i>
+                        Métodos de Integración
+                    </span>
+                    <h1 class="display-4 fw-bold mb-3 text-white" data-aos="fade-up">
+                        Integrales <span class="gradient-text">Irracionales</span>
+                    </h1>
+                    <p class="lead text-white-50" data-aos="fade-up" data-aos-delay="100">
+                        La estrategia del curso: una sustitución bien elegida hace desaparecer la raíz
+                        y deja una integral que ya dominas. Aquí lo verás ocurrir en vivo, lado a lado.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5">
+
+        <!-- ═══════════ SECCIÓN 1: TEORÍA ═══════════ -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-info bg-opacity-25 text-info">
+                    <i class="bi bi-book"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Fundamento Teórico</h2>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="step-card h-100">
+                        <h5 class="text-info fw-bold"><i class="bi bi-lightbulb me-2"></i>La Idea: Racionalizar</h5>
+                        <p class="text-white-50 mb-0">
+                            Si el integrando contiene <span class="tex">\sqrt[q]{ax+b}</span>, la sustitución
+                            <span class="tex">u=\sqrt[q]{ax+b}</span> elimina la raíz: despejas
+                            <span class="tex">x</span> en función de <span class="tex">u</span>, reemplazas
+                            <span class="tex">dx</span> y todo se vuelve polinomio o fracción racional
+                            (Módulos 7 y 15).
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="step-card h-100">
+                        <h5 class="text-info fw-bold"><i class="bi bi-check2-circle me-2"></i>Varias Raíces a la Vez</h5>
+                        <p class="text-white-50 mb-0">
+                            Si conviven <span class="tex">\sqrt[m]{x}</span> y <span class="tex">\sqrt[n]{x}</span>,
+                            usa <span class="tex">u=x^{1/k}</span> con <span class="tex">k=\text{mcm}(m,n)</span>:
+                            una sola sustitución elimina todas las raíces al mismo tiempo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-box" data-aos="zoom-in">
+                <h5 class="text-white mb-3"><i class="bi bi-magic me-2"></i>Sustituciones Estándar del Curso</h5>
+                <div class="row align-items-center text-center">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <p class="text-white-50 small mb-1">Una raíz de índice q</p>
+                        <div class="tex tex-block">u=\sqrt[q]{ax+b} \;\Rightarrow\; x=\frac{u^q-b}{a},\; dx=\frac{q\,u^{q-1}}{a}\,du</div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <p class="text-white-50 small mb-1">Raíces de índices m y n</p>
+                        <div class="tex tex-block">u=x^{1/k},\quad k=\text{mcm}(m,n)</div>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="text-white-50 small mb-1">Raíz en denominador con potencia</p>
+                        <div class="tex tex-block">u=\text{raíz},\; \text{y si hace falta } w=1+u</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card" data-aos="fade-up">
+                <h5 class="text-info fw-bold mb-3"><i class="bi bi-signpost-split me-2"></i>Guía Rápida: ¿Qué Sustitución Uso?</h5>
+                <div class="table-responsive">
+                    <table class="table table-dark-soft table-sm align-middle mb-0">
+                        <thead>
+                            <tr class="text-info small">
+                                <th>Si ves…</th>
+                                <th>Sustitución</th>
+                                <th>En qué termina</th>
+                                <th>Módulo base</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="tex">\sqrt[q]{ax+b}</span> sola o multiplicando</td>
+                                <td><span class="tex">u=\sqrt[q]{ax+b}</span></td>
+                                <td>Polinomios (potencias)</td>
+                                <td><span class="badge bg-info bg-opacity-25 text-info">7</span></td>
+                            </tr>
+                            <tr>
+                                <td>Dos o más raíces de <span class="tex">x</span> con índices distintos</td>
+                                <td><span class="tex">u=x^{1/\text{mcm}}</span></td>
+                                <td>Fracción racional</td>
+                                <td><span class="badge bg-info bg-opacity-25 text-info">15</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tex">\frac{\sqrt{x}}{(1+\sqrt{x})^n}</span> o similar</td>
+                                <td><span class="tex">u=\sqrt{x}</span> y luego <span class="tex">w=1+u</span></td>
+                                <td>Racional + logaritmos</td>
+                                <td><span class="badge bg-info bg-opacity-25 text-info">9 / 15</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tex">\sqrt{ax^2+bx+c}</span> (raíz cuadrática)</td>
+                                <td>Completar cuadrado + trig.</td>
+                                <td>Trigonométrica / hiperbólica</td>
+                                <td><span class="badge bg-info bg-opacity-25 text-info">13 + 16</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="alert alert-warning bg-opacity-10 border-0 text-warning" data-aos="fade-up">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Dato curioso:</strong> no todo se puede racionalizar. Integrales como
+                <span class="tex">\int \sqrt{1+x^3}\,dx</span> no tienen primitiva con funciones elementales
+                (son integrales elípticas). En esos casos, la salida son los métodos numéricos de la Fase 1
+                (Módulos 1–4): Riemann, Trapecio, Punto Medio y Simpson al rescate.
+            </div>
+        </section>
+
+        <!-- ═══════════ SECCIÓN 2: VISUALIZADOR ═══════════ -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-success bg-opacity-25 text-success">
+                    <i class="bi bi-arrow-left-right"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Lab de Racionalización: La Raíz Desaparece</h2>
+            </div>
+
+            <div class="row g-4">
+                <!-- Panel de controles -->
+                <div class="col-lg-4">
+                    <div class="step-card h-100 mb-0">
+                        <h5 class="text-success fw-bold mb-2">Elige la integral</h5>
+                        <div class="row g-2 mb-3">
+                            <div class="col-4">
+                                <label class="case-option active text-center d-block" id="fn-opt-0">
+                                    <input type="radio" class="d-none" name="fn-radio" id="fn-0" checked>
+                                    <span class="tex small d-block">x\sqrt{x+3}</span>
+                                </label>
+                            </div>
+                            <div class="col-4">
+                                <label class="case-option text-center d-block" id="fn-opt-1">
+                                    <input type="radio" class="d-none" name="fn-radio" id="fn-1">
+                                    <span class="tex small d-block">\frac{1}{\sqrt{x}+\sqrt[3]{x}}</span>
+                                </label>
+                            </div>
+                            <div class="col-4">
+                                <label class="case-option text-center d-block" id="fn-opt-2">
+                                    <input type="radio" class="d-none" name="fn-radio" id="fn-2">
+                                    <span class="tex small d-block">\frac{\sqrt{x}}{(1+\sqrt{x})^3}</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="control-label">
+                                <span>Límite inferior (<span class="tex">a</span>)</span>
+                                <span class="control-value" id="val-a">0.0</span>
+                            </div>
+                            <input type="range" class="form-range" id="slider-a" min="-2.9" max="4" step="0.1" value="0" aria-label="Límite inferior a">
+                        </div>
+
+                        <div class="mb-2">
+                            <div class="control-label">
+                                <span>Límite superior (<span class="tex">b</span>)</span>
+                                <span class="control-value" id="val-b">2.0</span>
+                            </div>
+                            <input type="range" class="form-range" id="slider-b" min="-2.9" max="4" step="0.1" value="2" aria-label="Límite superior b">
+                        </div>
+
+                        <div class="divider-soft"></div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-area" checked>
+                                    <label class="form-check-label" for="switch-area">Áreas sombreadas</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-marks" checked>
+                                    <label class="form-check-label" for="switch-marks">Límites en u</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-grid" checked>
+                                    <label class="form-check-label" for="switch-grid">Cuadrícula</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hint-box" id="sub-hint">—</div>
+
+                        <div class="divider-soft"></div>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-info btn-sm flex-fill" id="btn-reset">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>Reiniciar
+                            </button>
+                            <button class="btn btn-info btn-sm flex-fill text-dark fw-semibold" id="btn-export">
+                                <i class="bi bi-download me-1"></i>Exportar PNG
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfica + lecturas -->
+                <div class="col-lg-8">
+                    <div id="plot-area"></div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small>∫ f dx (exacta)</small>
+                                <strong class="text-info" id="out-x">0.0000</strong>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small>∫ G du (numérica)</small>
+                                <strong style="color:#f472b6;" id="out-u">0.0000</strong>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small>Diferencia</small>
+                                <strong style="color:#34d399;" id="out-diff">0.0e+0</strong>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small>Límites en u</small>
+                                <strong style="color:#fbbf24;" id="out-ulim">0 → 0</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ SECCIÓN 3: EJEMPLOS ═══════════ -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-warning bg-opacity-25 text-warning">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Ejemplos Resueltos Paso a Paso</h2>
+            </div>
+
+            <!-- Ejemplo 1 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">1</span>
+                    <h5 class="text-white mb-0">Ejemplo Básico (una raíz): <span class="tex">\displaystyle\int x\sqrt{x+3}\,dx</span></h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Sustitución racionalizante</p>
+                        <p class="text-white-50 small mb-1">
+                            <span class="tex">u=\sqrt{x+3} \Rightarrow u^2=x+3</span>, entonces
+                            <span class="tex">x=u^2-3</span> y <span class="tex">dx=2u\,du</span>.
+                        </p>
+                        <div class="tex tex-block">\int (u^2-3)\cdot u \cdot 2u\,du = 2\int\left(u^4-3u^2\right)du</div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 2: Integrar y regresar</p>
+                        <div class="tex tex-block">2\left(\frac{u^5}{5}-u^3\right)+C = \frac{2}{5}(x+3)^{5/2}-2(x+3)^{3/2}+C</div>
+                        <p class="text-white-50 small mt-2 mb-0">
+                            <i class="bi bi-info-circle text-info me-1"></i>
+                            Factorizando queda aún más elegante:
+                            <span class="tex">\frac{2}{15}(x+3)^{3/2}(3x-4)+C</span>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 2 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">2</span>
+                    <h5 class="text-white mb-0">Ejemplo Intermedio (dos raíces, mcm): <span class="tex">\displaystyle\int \frac{dx}{\sqrt{x}+\sqrt[3]{x}}</span></h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: mcm de índices</p>
+                        <p class="text-white-50 small mb-1">
+                            Índices 2 y 3 → <span class="tex">k=\text{mcm}(2,3)=6</span>:
+                            <span class="tex">u=x^{1/6}</span>, <span class="tex">x=u^6</span>,
+                            <span class="tex">dx=6u^5\,du</span>, <span class="tex">\sqrt{x}=u^3</span>,
+                            <span class="tex">\sqrt[3]{x}=u^2</span>.
+                        </p>
+                        <div class="tex tex-block">\int \frac{6u^5}{u^3+u^2}\,du = \int \frac{6u^3}{u+1}\,du</div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 2: Dividir y integrar</p>
+                        <div class="tex tex-block">6\int\left(u^2-u+1-\frac{1}{u+1}\right)du = 2u^3-3u^2+6u-6\ln|u+1|+C</div>
+                        <p class="text-info small fw-bold mb-1">Resultado Final</p>
+                        <div class="tex tex-block">2\sqrt{x}-3\sqrt[3]{x}+6\sqrt[6]{x}-6\ln\left|\sqrt[6]{x}+1\right|+C</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 3 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">3</span>
+                    <h5 class="text-white mb-0">Ejemplo Avanzado (raíz en denominador): <span class="tex">\displaystyle\int \frac{\sqrt{x}}{\left(1+\sqrt{x}\right)^3}\,dx</span></h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Primera sustitución</p>
+                        <p class="text-white-50 small mb-1">
+                            <span class="tex">u=\sqrt{x} \Rightarrow x=u^2</span>, <span class="tex">dx=2u\,du</span>:
+                        </p>
+                        <div class="tex tex-block">\int \frac{u}{(1+u)^3}\cdot 2u\,du = \int \frac{2u^2}{(1+u)^3}\,du</div>
+                        <p class="text-info small fw-bold mb-1">PASO 2: Segundo cambio <span class="tex">w=1+u</span></p>
+                        <div class="tex tex-block">2\int \frac{(w-1)^2}{w^3}\,dw = 2\int\left(\frac{1}{w}-\frac{2}{w^2}+\frac{1}{w^3}\right)dw</div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 3: Integrar y regresar dos veces</p>
+                        <div class="tex tex-block">2\ln|w|+\frac{4}{w}-\frac{1}{w^2}+C</div>
+                        <p class="text-info small fw-bold mb-1">Resultado Final</p>
+                        <div class="tex tex-block">2\ln\left(1+\sqrt{x}\right)+\frac{4}{1+\sqrt{x}}-\frac{1}{\left(1+\sqrt{x}\right)^2}+C</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info bg-opacity-10 border-0 text-info" data-aos="fade-up">
+                <i class="bi bi-stars me-2"></i>
+                <strong>Truco de examen:</strong> cuenta los índices de todas las raíces antes de sustituir.
+                Una sola raíz de índice <span class="tex">q</span> → <span class="tex">u^q=ax+b</span>.
+                Varias raíces → mcm de índices. Raíz anidada como <span class="tex">\sqrt{1+\sqrt{x}}</span> →
+                sustituye de adentro hacia afuera: primero <span class="tex">u=\sqrt{x}</span>, luego
+                <span class="tex">w=1+u</span>.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-custom mt-5 py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3 text-white">
+                        <i class="bi bi-calculator-fill text-primary me-2"></i>
+                        Módulo 18 · Integrales Irracionales
+                    </h5>
+                    <p class="text-white-50 small mb-0">
+                        Plataforma educativa desarrollada como parte del parcial del curso de Matemáticas II.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Navegación</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../index.html" class="text-decoration-none text-white-50">Inicio</a></li>
+                        <li><a href="modulo17.html" class="text-decoration-none text-white-50">Módulo Anterior</a></li>
+                        <li><a href="modulo19.html" class="text-decoration-none text-white-50">Módulo Siguiente</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Tecnologías</h6>
+                    <ul class="list-unstyled small">
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>KaTeX · Plotly.js</li>
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>Bootstrap 5</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 opacity-25">
+            <div class="text-center text-white-50 small">
+                <p class="mb-0">© 2026 Universidad Tecnológica de Pereira · Matemáticas II</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="../js/modules/modulo18.js"></script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 15: Fracciones Parciales | Cálculo Integral UTP</title>
+
+    <!-- Bootstrap 5 + Bootswatch Zephyr -->
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- KaTeX: carga síncrona, SIN auto-render (renderizado manual en el JS) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .formula-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--bs-info);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        .step-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .step-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--bs-info);
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            background: var(--bs-info);
+            color: #000;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        /* ---- Sistema único de fórmulas ---- */
+        .tex-block {
+            color: #fff;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.35rem 0.15rem;
+        }
+        .tex-block .katex-display { margin: 0.35rem 0; }
+        .tex-block .katex { font-size: 1.02em; }
+        .tex-block::-webkit-scrollbar { height: 6px; }
+        .tex-block::-webkit-scrollbar-track { background: rgba(13, 202, 240, 0.08); border-radius: 4px; }
+        .tex-block::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #0dcaf0, #6f42c1); border-radius: 4px; }
+        /* ---- Visualizador ---- */
+        #plot-area {
+            width: 100%;
+            height: 470px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(13, 202, 240, 0.15);
+            border-radius: 0.75rem;
+        }
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.65);
+            margin-bottom: 0.25rem;
+        }
+        .control-value {
+            font-weight: 700;
+            color: #0dcaf0;
+            background: rgba(13, 202, 240, 0.12);
+            border-radius: 0.4rem;
+            padding: 0.05rem 0.5rem;
+            font-variant-numeric: tabular-nums;
+        }
+        .form-range { accent-color: #0dcaf0; }
+        .form-range::-webkit-slider-thumb { background: #0dcaf0; box-shadow: 0 0 8px rgba(13, 202, 240, 0.6); }
+        .form-range::-moz-range-thumb { background: #0dcaf0; border: none; box-shadow: 0 0 8px rgba(13, 202, 240, 0.6); }
+        .form-switch .form-check-input { cursor: pointer; }
+        .form-switch .form-check-input:checked { background-color: #0dcaf0; border-color: #0dcaf0; }
+        .form-switch .form-check-input:focus { border-color: #0dcaf0; box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.2); }
+        .form-check-label { font-size: 0.82rem; color: rgba(255, 255, 255, 0.75); cursor: pointer; }
+        .stat-chip {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.6rem;
+            padding: 0.7rem 0.9rem;
+            text-align: center;
+            height: 100%;
+        }
+        .stat-chip small { display: block; color: rgba(255, 255, 255, 0.55); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-chip strong { font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+        .divider-soft { border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 1rem 0; }
+        .table-dark-soft { --bs-table-bg: transparent; --bs-table-color: rgba(255,255,255,0.8); --bs-table-border-color: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animated"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <i class="bi bi-arrow-left-circle fs-4 text-primary"></i>
+                <span class="fw-bold">Volver al Inicio</span>
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-info bg-opacity-25 text-info px-3 py-2">Módulo 15</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero-section position-relative overflow-hidden py-5">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+                    <span class="badge bg-info bg-opacity-25 text-info rounded-pill px-3 py-2 mb-3" data-aos="fade-down">
+                        <i class="bi bi-circle-fill me-1 small-dot"></i>
+                        Fase 3 · Métodos de Integración
+                    </span>
+                    <h1 class="display-4 fw-bold mb-3 text-white" data-aos="fade-up">
+                        Fracciones <span class="gradient-text">Parciales</span>
+                    </h1>
+                    <p class="lead text-white-50" data-aos="fade-up" data-aos-delay="100">
+                        Descomponer una fracción racional complicada en sumas simples que ya sabes integrar:
+                        logaritmos, potencias y arctangentes. El álgebra hace el trabajo pesado.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5">
+
+        <!-- ═══════════ SECCIÓN 1: TEORÍA ═══════════ -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-info bg-opacity-25 text-info">
+                    <i class="bi bi-book"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Fundamento Teórico</h2>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="step-card h-100">
+                        <h5 class="text-info fw-bold"><i class="bi bi-lightbulb me-2"></i>¿Cuándo se Usa?</h5>
+                        <p class="text-white-50 mb-0">
+                            Cuando integras un cociente de polinomios <span class="tex">P(x)/Q(x)</span> y el
+                            grado de <span class="tex">P</span> es menor que el de <span class="tex">Q</span>
+                            (fracción propia). Si no lo es, primero divide polinomios y aplica partes al residuo.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="step-card h-100">
+                        <h5 class="text-info fw-bold"><i class="bi bi-check2-circle me-2"></i>Método de Tapar (Heaviside)</h5>
+                        <p class="text-white-50 mb-0">
+                            Para factores lineales distintos: para hallar <span class="tex">A</span> de
+                            <span class="tex">(x-r)</span>, "tapa" ese factor en la fracción original y evalúa
+                            el resto en <span class="tex">x=r</span>. Obtienes el coeficiente en un segundo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-box" data-aos="zoom-in">
+                <h5 class="text-white mb-3"><i class="bi bi-magic me-2"></i>Formas de Descomposición</h5>
+                <div class="row align-items-center">
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <p class="text-white-50 small mb-1">Lineales distintos</p>
+                        <div class="tex tex-block">\frac{P(x)}{(x-r_1)(x-r_2)} = \frac{A}{x-r_1} + \frac{B}{x-r_2}</div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <p class="text-white-50 small mb-1">Lineal repetido</p>
+                        <div class="tex tex-block">\frac{P(x)}{(x-r)^2} = \frac{A}{x-r} + \frac{B}{(x-r)^2}</div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <p class="text-white-50 small mb-1">Cuadrático irreducible (<span class="tex">\Delta \lt 0</span>)</p>
+                        <div class="tex tex-block">\frac{P(x)}{x^2+bx+c} = \frac{Ax+B}{x^2+bx+c}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card" data-aos="fade-up">
+                <h5 class="text-info fw-bold mb-3"><i class="bi bi-signpost-split me-2"></i>Guía Rápida: Factor → Descomposición → Integral</h5>
+                <div class="table-responsive">
+                    <table class="table table-dark-soft table-sm align-middle mb-0">
+                        <thead>
+                            <tr class="text-info small">
+                                <th>Factor de Q(x)</th>
+                                <th>Aporta términos</th>
+                                <th>Integral resultante</th>
+                                <th>Módulo base</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="tex">(x-r)</span> simple</td>
+                                <td><span class="tex">\frac{A}{x-r}</span></td>
+                                <td><span class="tex">A\ln|x-r|</span></td>
+                                <td><span class="badge bg-info bg-opacity-25 text-info">9</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tex">(x-r)^n</span> repetido</td>
+                                <td><span class="tex">\frac{A_1}{x-r}+\dots+\frac{A_n}{(x-r)^n}</span></td>
+                                <td><span class="tex">\ln</span> + potencias</td>
+                                <td><span class="badge bg-info bg-opacity-25 text-info">7 / 9</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tex">x^2+bx+c</span>, <span class="tex">\Delta \lt 0</span></td>
+                                <td><span class="tex">\frac{Ax+B}{x^2+bx+c}</span></td>
+                                <td><span class="tex">\ln</span> + <span class="tex">\arctan</span></td>
+                                <td><span class="badge bg-info bg-opacity-25 text-info">13</span></td>
+                            </tr>
+                            <tr>
+                                <td>grado <span class="tex">P \ge</span> grado <span class="tex">Q</span></td>
+                                <td>Dividir primero</td>
+                                <td>Polinomio + fracción propia</td>
+                                <td><span class="badge bg-primary bg-opacity-25 text-primary">7</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ SECCIÓN 2: VISUALIZADOR ═══════════ -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-success bg-opacity-25 text-success">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Visualizador: La Descomposición en Vivo</h2>
+            </div>
+
+            <div class="row g-4">
+                <!-- Panel de controles -->
+                <div class="col-lg-4">
+                    <div class="step-card h-100 mb-0">
+                        <h5 class="text-success fw-bold mb-1">
+                            <span class="tex">\displaystyle\int \frac{dx}{(x-r_1)(x-r_2)}</span>
+                        </h5>
+                        <p class="text-white-50 small">
+                            Mueve las raíces <span class="tex">r_1</span> y <span class="tex">r_2</span>: los
+                            coeficientes <span class="tex">A</span> y <span class="tex">B</span> se recalculan
+                            al instante y las dos fracciones parciales (rosa y verde) siempre suman la curva original.
+                        </p>
+
+                        <div class="mb-3">
+                            <div class="control-label">
+                                <span>Límite inferior (<span class="tex">a</span>)</span>
+                                <span class="control-value" id="val-a">-0.8</span>
+                            </div>
+                            <input type="range" class="form-range" id="slider-a" min="-5" max="4" step="0.1" value="-0.8" aria-label="Límite inferior a">
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="control-label">
+                                <span>Límite superior (<span class="tex">b</span>)</span>
+                                <span class="control-value" id="val-b">0.8</span>
+                            </div>
+                            <input type="range" class="form-range" id="slider-b" min="-4" max="5" step="0.1" value="0.8" aria-label="Límite superior b">
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="control-label">
+                                <span>Raíz <span class="tex">r_1</span></span>
+                                <span class="control-value" id="val-r1">-1.0</span>
+                            </div>
+                            <input type="range" class="form-range" id="slider-r1" min="-4" max="0" step="0.1" value="-1" aria-label="Raíz r1">
+                        </div>
+
+                        <div class="mb-2">
+                            <div class="control-label">
+                                <span>Raíz <span class="tex">r_2</span></span>
+                                <span class="control-value" id="val-r2">1.0</span>
+                            </div>
+                            <input type="range" class="form-range" id="slider-r2" min="0" max="4" step="0.1" value="1" aria-label="Raíz r2">
+                        </div>
+
+                        <div class="divider-soft"></div>
+
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-terms" checked>
+                                    <label class="form-check-label" for="switch-terms">Fracciones parciales</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-sum">
+                                    <label class="form-check-label" for="switch-sum">Verificar suma</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-area" checked>
+                                    <label class="form-check-label" for="switch-area">Área sombreada</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-grid" checked>
+                                    <label class="form-check-label" for="switch-grid">Cuadrícula</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider-soft"></div>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-info btn-sm flex-fill" id="btn-reset">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>Reiniciar
+                            </button>
+                            <button class="btn btn-info btn-sm flex-fill text-dark fw-semibold" id="btn-export">
+                                <i class="bi bi-download me-1"></i>Exportar PNG
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfica + lecturas -->
+                <div class="col-lg-8">
+                    <div id="plot-area"></div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small>Coeficiente A</small>
+                                <strong style="color:#f472b6;" id="out-A">0.000</strong>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small>Coeficiente B</small>
+                                <strong style="color:#34d399;" id="out-B">0.000</strong>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small>Integral en [a, b]</small>
+                                <strong class="text-info" id="out-int">0.0000</strong>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small>Estado</small>
+                                <strong id="out-status">—</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ SECCIÓN 3: EJEMPLOS ═══════════ -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-warning bg-opacity-25 text-warning">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Ejemplos Resueltos Paso a Paso</h2>
+            </div>
+
+            <!-- Ejemplo 1 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">1</span>
+                    <h5 class="text-white mb-0">Ejemplo Básico (lineales distintos): <span class="tex">\displaystyle\int \frac{dx}{x^2-3x+2}</span></h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Factorizar y plantear</p>
+                        <p class="text-white-50 small mb-1">
+                            <span class="tex">x^2-3x+2 = (x-1)(x-2)</span>, entonces
+                            <span class="tex">\frac{1}{(x-1)(x-2)} = \frac{A}{x-1} + \frac{B}{x-2}</span>.
+                        </p>
+                        <p class="text-info small fw-bold mb-1">PASO 2: Método de tapar</p>
+                        <p class="text-white-50 small mb-1">
+                            Tapa <span class="tex">(x-1)</span> y evalúa en <span class="tex">x=1</span>:
+                            <span class="tex">A = \frac{1}{1-2} = -1</span>.
+                            Tapa <span class="tex">(x-2)</span> y evalúa en <span class="tex">x=2</span>:
+                            <span class="tex">B = \frac{1}{2-1} = 1</span>.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 3: Integrar término a término</p>
+                        <div class="tex tex-block">\int\left(\frac{-1}{x-1} + \frac{1}{x-2}\right)dx = -\ln|x-1| + \ln|x-2| + C</div>
+                        <p class="text-info small fw-bold mb-1">Resultado Final</p>
+                        <div class="tex tex-block">\ln\left|\frac{x-2}{x-1}\right| + C</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 2 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">2</span>
+                    <h5 class="text-white mb-0">Ejemplo Intermedio (factor repetido): <span class="tex">\displaystyle\int \frac{3x+5}{(x+2)^2}\,dx</span></h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Plantear la descomposición</p>
+                        <div class="tex tex-block">\frac{3x+5}{(x+2)^2} = \frac{A}{x+2} + \frac{B}{(x+2)^2}</div>
+                        <p class="text-info small fw-bold mb-1">PASO 2: Igualar numeradores</p>
+                        <p class="text-white-50 small mb-1">
+                            <span class="tex">3x+5 = A(x+2) + B</span>. Con <span class="tex">x=-2</span>:
+                            <span class="tex">B = -1</span>. Comparando coeficientes de <span class="tex">x</span>:
+                            <span class="tex">A = 3</span>.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 3: Integrar</p>
+                        <div class="tex tex-block">\int\left(\frac{3}{x+2} - \frac{1}{(x+2)^2}\right)dx = 3\ln|x+2| + \frac{1}{x+2} + C</div>
+                        <p class="text-info small fw-bold mb-1 mt-2">Comprobación (derivando)</p>
+                        <div class="tex tex-block">\frac{3}{x+2} - \frac{1}{(x+2)^2} = \frac{3x+5}{(x+2)^2} \;\checkmark</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 3 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">3</span>
+                    <h5 class="text-white mb-0">Ejemplo Avanzado (cuadrático irreducible): <span class="tex">\displaystyle\int \frac{2x+3}{x^2+2x+5}\,dx</span></h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Separar la derivada del denominador</p>
+                        <p class="text-white-50 small mb-1">
+                            La derivada de <span class="tex">x^2+2x+5</span> es <span class="tex">2x+2</span>.
+                            Escribimos <span class="tex">2x+3 = (2x+2) + 1</span> y partimos la integral en dos.
+                        </p>
+                        <div class="tex tex-block">\int \frac{2x+2}{x^2+2x+5}\,dx + \int \frac{dx}{x^2+2x+5}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 2: Resolver cada parte</p>
+                        <p class="text-white-50 small mb-1">
+                            La primera es logarítmica (Módulo 9). La segunda: completa el cuadrado
+                            <span class="tex">(x+1)^2+4</span> y usa arctan (Módulo 13).
+                        </p>
+                        <p class="text-info small fw-bold mb-1">Resultado Final</p>
+                        <div class="tex tex-block">\ln\left(x^2+2x+5\right) + \frac{1}{2}\arctan\left(\frac{x+1}{2}\right) + C</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info bg-opacity-10 border-0 text-info" data-aos="fade-up">
+                <i class="bi bi-stars me-2"></i>
+                <strong>Truco de examen:</strong> antes de descomponer, revisa el grado. Si el numerador tiene
+                grado mayor o igual al denominador, <strong>divide polinomios primero</strong>: integrarás un
+                polinomio fácil más una fracción propia que sí se descompone.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-custom mt-5 py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3 text-white">
+                        <i class="bi bi-calculator-fill text-primary me-2"></i>
+                        Módulo 15 · Fracciones Parciales
+                    </h5>
+                    <p class="text-white-50 small mb-0">
+                        Plataforma educativa desarrollada como parte del parcial del curso de Matemáticas II.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Navegación</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../index.html" class="text-decoration-none text-white-50">Inicio</a></li>
+                        <li><a href="modulo14.html" class="text-decoration-none text-white-50">Módulo Anterior</a></li>
+                        <li><a href="modulo16.html" class="text-decoration-none text-white-50">Módulo Siguiente</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Tecnologías</h6>
+                    <ul class="list-unstyled small">
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>KaTeX · Plotly.js</li>
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>Bootstrap 5</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 opacity-25">
+            <div class="text-center text-white-50 small">
+                <p class="mb-0">© 2026 Universidad Tecnológica de Pereira · Matemáticas II</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="../js/modules/modulo15.js"></script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 16: Sustitución Trigonométrica | Cálculo Integral UTP</title>
+
+    <!-- Bootstrap 5 + Bootswatch Zephyr -->
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- KaTeX: carga síncrona, SIN auto-render (renderizado manual en el JS) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .formula-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--bs-info);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        .step-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .step-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--bs-info);
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            background: var(--bs-info);
+            color: #000;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        /* ---- Sistema único de fórmulas ---- */
+        .tex-block {
+            color: #fff;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.35rem 0.15rem;
+        }
+        .tex-block .katex-display { margin: 0.35rem 0; }
+        .tex-block .katex { font-size: 1.02em; }
+        .tex-block::-webkit-scrollbar { height: 6px; }
+        .tex-block::-webkit-scrollbar-track { background: rgba(13, 202, 240, 0.08); border-radius: 4px; }
+        .tex-block::-webkit-scrollbar-thumb { background: linear-gradient(90deg, #0dcaf0, #6f42c1); border-radius: 4px; }
+        /* ---- Visualizador ---- */
+        #plot-area {
+            width: 100%;
+            height: 470px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(13, 202, 240, 0.15);
+            border-radius: 0.75rem;
+        }
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.65);
+            margin-bottom: 0.25rem;
+        }
+        .control-value {
+            font-weight: 700;
+            color: #0dcaf0;
+            background: rgba(13, 202, 240, 0.12);
+            border-radius: 0.4rem;
+            padding: 0.05rem 0.5rem;
+            font-variant-numeric: tabular-nums;
+        }
+        .form-range { accent-color: #0dcaf0; }
+        .form-range::-webkit-slider-thumb { background: #0dcaf0; box-shadow: 0 0 8px rgba(13, 202, 240, 0.6); }
+        .form-range::-moz-range-thumb { background: #0dcaf0; border: none; box-shadow: 0 0 8px rgba(13, 202, 240, 0.6); }
+        .form-switch .form-check-input, .form-check-input { cursor: pointer; }
+        .form-switch .form-check-input:checked, .form-check-input:checked { background-color: #0dcaf0; border-color: #0dcaf0; }
+        .form-check-input:focus { border-color: #0dcaf0; box-shadow: 0 0 0 0.2rem rgba(13, 202, 240, 0.2); }
+        .form-check-label { font-size: 0.82rem; color: rgba(255, 255, 255, 0.75); cursor: pointer; }
+        .case-option {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 0.6rem;
+            padding: 0.55rem 0.7rem;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            height: 100%;
+        }
+        .case-option:hover { border-color: rgba(13, 202, 240, 0.5); }
+        .case-option.active { border-color: #0dcaf0; background: rgba(13, 202, 240, 0.12); }
+        .stat-chip {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.6rem;
+            padding: 0.7rem 0.9rem;
+            text-align: center;
+            height: 100%;
+        }
+        .stat-chip small { display: block; color: rgba(255, 255, 255, 0.55); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-chip strong { font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+        .divider-soft { border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 1rem 0; }
+        .table-dark-soft { --bs-table-bg: transparent; --bs-table-color: rgba(255,255,255,0.8); --bs-table-border-color: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animated"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top custom-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
+                <i class="bi bi-arrow-left-circle fs-4 text-primary"></i>
+                <span class="fw-bold">Volver al Inicio</span>
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-info bg-opacity-25 text-info px-3 py-2">Módulo 16</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero-section position-relative overflow-hidden py-5">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+                    <span class="badge bg-info bg-opacity-25 text-info rounded-pill px-3 py-2 mb-3" data-aos="fade-down">
+                        <i class="bi bi-circle-fill me-1 small-dot"></i>
+                        Fase 3 · Métodos de Integración
+                    </span>
+                    <h1 class="display-4 fw-bold mb-3 text-white" data-aos="fade-up">
+                        Sustitución <span class="gradient-text">Trigonométrica</span>
+                    </h1>
+                    <p class="lead text-white-50" data-aos="fade-up" data-aos-delay="100">
+                        Cuando aparece una raíz de un cuadrado, las identidades trigonométricas la hacen
+                        desaparecer. Y el triángulo rectángulo de referencia te trae de vuelta a x.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5">
+
+        <!-- ═══════════ SECCIÓN 1: TEORÍA ═══════════ -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-info bg-opacity-25 text-info">
+                    <i class="bi bi-book"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Fundamento Teórico</h2>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="step-card h-100">
+                        <h5 class="text-info fw-bold"><i class="bi bi-lightbulb me-2"></i>¿Por Qué Funciona?</h5>
+                        <p class="text-white-50 mb-0">
+                            Las identidades <span class="tex">1-\sin^2\theta=\cos^2\theta</span>,
+                            <span class="tex">1+\tan^2\theta=\sec^2\theta</span> y
+                            <span class="tex">\sec^2\theta-1=\tan^2\theta</span> convierten la raíz en un
+                            solo término trigonométrico sin radical. La sustitución correcta depende del
+                            signo y el orden dentro de la raíz.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="step-card h-100">
+                        <h5 class="text-info fw-bold"><i class="bi bi-check2-circle me-2"></i>El Triángulo de Referencia</h5>
+                        <p class="text-white-50 mb-0">
+                            Después de integrar en <span class="tex">\theta</span>, debes volver a
+                            <span class="tex">x</span>. Dibujas un triángulo rectángulo donde
+                            <span class="tex">\theta</span> cumple la sustitución original, lees los lados y
+                            reemplazas. Nunca dejes <span class="tex">\theta</span> en la respuesta final.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-box" data-aos="zoom-in">
+                <h5 class="text-white mb-3"><i class="bi bi-magic me-2"></i>Los Tres Casos</h5>
+                <div class="row align-items-center">
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <p class="text-white-50 small mb-1">Caso 1: <span class="tex">\sqrt{a^2-u^2}</span></p>
+                        <div class="tex tex-block">u = a\sin\theta \;\Rightarrow\; \sqrt{a^2-u^2} = a\cos\theta</div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <p class="text-white-50 small mb-1">Caso 2: <span class="tex">\sqrt{a^2+u^2}</span></p>
+                        <div class="tex tex-block">u = a\tan\theta \;\Rightarrow\; \sqrt{a^2+u^2} = a\sec\theta</div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <p class="text-white-50 small mb-1">Caso 3: <span class="tex">\sqrt{u^2-a^2}</span></p>
+                        <div class="tex tex-block">u = a\sec\theta \;\Rightarrow\; \sqrt{u^2-a^2} = a\tan\theta</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-card" data-aos="fade-up">
+                <h5 class="text-info fw-bold mb-3"><i class="bi bi-signpost-split me-2"></i>Guía Rápida: Raíz → Sustitución → Diferencial</h5>
+                <div class="table-responsive">
+                    <table class="table table-dark-soft table-sm align-middle mb-0">
+                        <thead>
+                            <tr class="text-info small">
+                                <th>Radical</th>
+                                <th>Sustitución</th>
+                                <th>Diferencial</th>
+                                <th>Identidad que actúa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="tex">\sqrt{a^2-u^2}</span></td>
+                                <td><span class="tex">u=a\sin\theta</span></td>
+                                <td><span class="tex">du=a\cos\theta\,d\theta</span></td>
+                                <td><span class="tex">1-\sin^2\theta=\cos^2\theta</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tex">\sqrt{a^2+u^2}</span></td>
+                                <td><span class="tex">u=a\tan\theta</span></td>
+                                <td><span class="tex">du=a\sec^2\theta\,d\theta</span></td>
+                                <td><span class="tex">1+\tan^2\theta=\sec^2\theta</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="tex">\sqrt{u^2-a^2}</span></td>
+                                <td><span class="tex">u=a\sec\theta</span></td>
+                                <td><span class="tex">du=a\sec\theta\tan\theta\,d\theta</span></td>
+                                <td><span class="tex">\sec^2\theta-1=\tan^2\theta</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ SECCIÓN 2: VISUALIZADOR ═══════════ -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-success bg-opacity-25 text-success">
+                    <i class="bi bi-triangle"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Visualizador: El Triángulo de Referencia</h2>
+            </div>
+
+            <div class="row g-4">
+                <!-- Panel de controles -->
+                <div class="col-lg-4">
+                    <div class="step-card h-100 mb-0">
+                        <h5 class="text-success fw-bold mb-2">Elige el caso</h5>
+                        <div class="row g-2 mb-3">
+                            <div class="col-4">
+                                <label class="case-option active text-center d-block" id="case-opt-1">
+                                    <input type="radio" class="btn-check-input d-none" name="case-radio" id="case-1" checked>
+                                    <span class="d-block fw-bold text-info">Caso 1</span>
+                                    <span class="tex small">a^2-u^2</span>
+                                </label>
+                            </div>
+                            <div class="col-4">
+                                <label class="case-option text-center d-block" id="case-opt-2">
+                                    <input type="radio" class="d-none" name="case-radio" id="case-2">
+                                    <span class="d-block fw-bold text-info">Caso 2</span>
+                                    <span class="tex small">a^2+u^2</span>
+                                </label>
+                            </div>
+                            <div class="col-4">
+                                <label class="case-option text-center d-block" id="case-opt-3">
+                                    <input type="radio" class="d-none" name="case-radio" id="case-3">
+                                    <span class="d-block fw-bold text-info">Caso 3</span>
+                                    <span class="tex small">u^2-a^2</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="control-label">
+                                <span>Constante (<span class="tex">a</span>)</span>
+                                <span class="control-value" id="val-a">2.0</span>
+                            </div>
+                            <input type="range" class="form-range" id="slider-a" min="0.5" max="3" step="0.1" value="2" aria-label="Constante a">
+                        </div>
+
+                        <div class="mb-2">
+                            <div class="control-label">
+                                <span>Variable (<span class="tex">u</span>)</span>
+                                <span class="control-value" id="val-u">1.2</span>
+                            </div>
+                            <input type="range" class="form-range" id="slider-u" min="-4" max="4" step="0.05" value="1.2" aria-label="Variable u">
+                        </div>
+
+                        <div class="divider-soft"></div>
+
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-arc" checked>
+                                    <label class="form-check-label" for="switch-arc">Arco del ángulo θ</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-labels" checked>
+                                    <label class="form-check-label" for="switch-labels">Etiquetas de lados</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-guide" checked>
+                                    <label class="form-check-label" for="switch-guide">Curva guía</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="switch-grid" checked>
+                                    <label class="form-check-label" for="switch-grid">Cuadrícula</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider-soft"></div>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-success btn-sm flex-fill" id="btn-play">
+                                <i class="bi bi-play-fill me-1"></i>Animar θ
+                            </button>
+                            <button class="btn btn-outline-info btn-sm flex-fill" id="btn-reset">
+                                <i class="bi bi-arrow-counterclockwise me-1"></i>Reiniciar
+                            </button>
+                            <button class="btn btn-info btn-sm flex-fill text-dark fw-semibold" id="btn-export">
+                                <i class="bi bi-download me-1"></i>PNG
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Triángulo + lecturas -->
+                <div class="col-lg-8">
+                    <div id="plot-area"></div>
+                    <div class="row g-3 mt-1">
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small>Ángulo θ</small>
+                                <strong style="color:#fbbf24;" id="out-theta">0.0°</strong>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small id="lbl-ratio">sin θ = u/a</small>
+                                <strong style="color:#f472b6;" id="out-ratio">0.000</strong>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small id="lbl-rad">√(a²−u²)</small>
+                                <strong class="text-info" id="out-rad">0.000</strong>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="stat-chip">
+                                <small id="lbl-check">a·cos θ (debe coincidir)</small>
+                                <strong style="color:#34d399;" id="out-check">0.000</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════ SECCIÓN 3: EJEMPLOS ═══════════ -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-warning bg-opacity-25 text-warning">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Ejemplos Resueltos Paso a Paso</h2>
+            </div>
+
+            <!-- Ejemplo 1 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">1</span>
+                    <h5 class="text-white mb-0">Ejemplo Básico (Caso 1): <span class="tex">\displaystyle\int \sqrt{4-x^2}\,dx</span></h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Sustituir</p>
+                        <p class="text-white-50 small mb-1">
+                            Con <span class="tex">a=2</span>: <span class="tex">x=2\sin\theta</span>,
+                            <span class="tex">dx=2\cos\theta\,d\theta</span>, y
+                            <span class="tex">\sqrt{4-x^2}=2\cos\theta</span>.
+                        </p>
+                        <div class="tex tex-block">\int 2\cos\theta \cdot 2\cos\theta\,d\theta = 4\int \cos^2\theta\,d\theta</div>
+                        <p class="text-info small fw-bold mb-1">PASO 2: Identidad de ángulo medio</p>
+                        <div class="tex tex-block">4\int \frac{1+\cos 2\theta}{2}\,d\theta = 2\theta + \sin 2\theta + C</div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 3: Triángulo y regreso a x</p>
+                        <p class="text-white-50 small mb-1">
+                            <span class="tex">\sin\theta=\frac{x}{2}</span>, cateto adyacente
+                            <span class="tex">\sqrt{4-x^2}</span>. Entonces
+                            <span class="tex">\sin 2\theta = 2\sin\theta\cos\theta = \frac{x\sqrt{4-x^2}}{4}</span>.
+                        </p>
+                        <p class="text-info small fw-bold mb-1">Resultado Final</p>
+                        <div class="tex tex-block">2\arcsin\left(\frac{x}{2}\right) + \frac{x\sqrt{4-x^2}}{2} + C</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 2 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">2</span>
+                    <h5 class="text-white mb-0">Ejemplo Intermedio (Caso 2): <span class="tex">\displaystyle\int \frac{dx}{\left(x^2+4\right)^{3/2}}</span></h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Sustituir</p>
+                        <p class="text-white-50 small mb-1">
+                            <span class="tex">x=2\tan\theta</span>, <span class="tex">dx=2\sec^2\theta\,d\theta</span>,
+                            y <span class="tex">(x^2+4)^{3/2}=(2\sec\theta)^3=8\sec^3\theta</span>.
+                        </p>
+                        <div class="tex tex-block">\int \frac{2\sec^2\theta}{8\sec^3\theta}\,d\theta = \frac{1}{4}\int \cos\theta\,d\theta = \frac{1}{4}\sin\theta + C</div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 2: Triángulo y regreso a x</p>
+                        <p class="text-white-50 small mb-1">
+                            <span class="tex">\tan\theta=\frac{x}{2}</span>: opuesto <span class="tex">x</span>,
+                            adyacente <span class="tex">2</span>, hipotenusa <span class="tex">\sqrt{x^2+4}</span>.
+                            Luego <span class="tex">\sin\theta=\frac{x}{\sqrt{x^2+4}}</span>.
+                        </p>
+                        <p class="text-info small fw-bold mb-1">Resultado Final</p>
+                        <div class="tex tex-block">\frac{x}{4\sqrt{x^2+4}} + C</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 3 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">3</span>
+                    <h5 class="text-white mb-0">Ejemplo Avanzado (Caso 3): <span class="tex">\displaystyle\int \frac{\sqrt{x^2-9}}{x}\,dx</span></h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Sustituir</p>
+                        <p class="text-white-50 small mb-1">
+                            <span class="tex">x=3\sec\theta</span>, <span class="tex">dx=3\sec\theta\tan\theta\,d\theta</span>,
+                            <span class="tex">\sqrt{x^2-9}=3\tan\theta</span>.
+                        </p>
+                        <div class="tex tex-block">\int \frac{3\tan\theta}{3\sec\theta}\cdot 3\sec\theta\tan\theta\,d\theta = 3\int \tan^2\theta\,d\theta</div>
+                        <p class="text-info small fw-bold mb-1">PASO 2: Integrar en θ</p>
+                        <div class="tex tex-block">3\int(\sec^2\theta-1)\,d\theta = 3\tan\theta - 3\theta + C</div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 3: Triángulo y regreso a x</p>
+                        <p class="text-white-50 small mb-1">
+                            <span class="tex">\sec\theta=\frac{x}{3}</span>: hipotenusa <span class="tex">x</span>,
+                            adyacente <span class="tex">3</span>, opuesto <span class="tex">\sqrt{x^2-9}</span>.
+                            Entonces <span class="tex">3\tan\theta=\sqrt{x^2-9}</span> y
+                            <span class="tex">\theta=\operatorname{arcsec}\frac{x}{3}</span>.
+                        </p>
+                        <p class="text-info small fw-bold mb-1">Resultado Final</p>
+                        <div class="tex tex-block">\sqrt{x^2-9} - 3\,\operatorname{arcsec}\left(\frac{x}{3}\right) + C</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info bg-opacity-10 border-0 text-info" data-aos="fade-up">
+                <i class="bi bi-stars me-2"></i>
+                <strong>Truco de examen:</strong> si la raíz contiene un trinomio completo
+                (<span class="tex">\sqrt{x^2+6x+10}</span>), primero <strong>completa el cuadrado</strong>
+                (Módulo 13) y luego aplica la sustitución trigonométrica al binomio resultante.
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-custom mt-5 py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3 text-white">
+                        <i class="bi bi-calculator-fill text-primary me-2"></i>
+                        Módulo 16 · Sustitución Trigonométrica
+                    </h5>
+                    <p class="text-white-50 small mb-0">
+                        Plataforma educativa desarrollada como parte del parcial del curso de Matemáticas II.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Navegación</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../index.html" class="text-decoration-none text-white-50">Inicio</a></li>
+                        <li><a href="modulo15.html" class="text-decoration-none text-white-50">Módulo Anterior</a></li>
+                        <li><a href="modulo17.html" class="text-decoration-none text-white-50">Módulo Siguiente</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Tecnologías</h6>
+                    <ul class="list-unstyled small">
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>KaTeX · Plotly.js</li>
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>Bootstrap 5</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 opacity-25">
+            <div class="text-center text-white-50 small">
+                <p class="mb-0">© 2026 Universidad Tecnológica de Pereira · Matemáticas II</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="../js/modules/modulo16.js"></script>
+</body>
+</html>

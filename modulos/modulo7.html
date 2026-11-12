@@ -3,70 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Módulo 7: Sustitución/Potencias | Cálculo Integral UTP</title>
+    <title>Módulo 7: Sustitución y Potencias | Cálculo Integral UTP</title>
+    
+    <!-- Bootstrap 5 + Bootswatch Zephyr -->
     <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/zephyr/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    <!-- AOS Animations -->
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/styles.css">
-    <link rel="stylesheet" href="../css/modules.css">
+    <style>
+        /* Ajustes locales para el módulo */
+        .formula-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--bs-info);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        .step-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s;
+        }
+        .step-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--bs-info);
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--bs-info);
+            color: #000;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        #plot-area {
+            width: 100%;
+            height: 450px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 0.75rem;
+        }
+    </style>
 </head>
 <body>
 
+    <!-- Fondo animado -->
     <div class="bg-animated"></div>
 
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top custom-navbar">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="../index.html">
-                <i class="bi bi-calculator-fill fs-4 text-primary"></i>
-                <span class="fw-bold">Matemáticas II</span>
+                <i class="bi bi-arrow-left-circle fs-4 text-primary"></i>
+                <span class="fw-bold">Volver al Inicio</span>
             </a>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-info bg-opacity-25 text-info px-3 py-2">Módulo 07</span>
+            </div>
         </div>
     </nav>
 
-    <header class="module-header">
-        <div class="container">
-            <a href="../index.html" class="back-link"><i class="bi bi-arrow-left"></i> Volver al Inicio</a>
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <div class="module-badge bg-secondary">07</div>
-                <div>
-                    <h1 class="mb-0">Sustitución / Potencias</h1>
-                    <p class="module-subtitle mb-0">Integración por cambio de variable</p>
+    <!-- HERO -->
+    <header class="hero-section position-relative overflow-hidden py-5">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+                    <span class="badge bg-info bg-opacity-25 text-info rounded-pill px-3 py-2 mb-3" data-aos="fade-down">
+                        <i class="bi bi-circle-fill me-1 small-dot"></i>
+                        Fase 2 · Métodos de Integración
+                    </span>
+                    <h1 class="display-4 fw-bold mb-3 text-white" data-aos="fade-up">
+                        Integración por <span class="gradient-text">Sustitución</span>
+                    </h1>
+                    <p class="lead text-white-50" data-aos="fade-up" data-aos-delay="100">
+                        También conocida como "Regla de la Cadena inversa". Transformamos integrales complejas en potencias simples usando el cambio de variable $u$.
+                    </p>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- CONTENIDO -->
     <main class="container py-5">
-        <section class="content-section text-center" data-aos="fade-up">
-            <div class="py-5">
-                <i class="bi bi-cone-striped display-1 text-warning mb-4"></i>
-                <h2 class="h1 fw-bold text-white mb-3">🚧 En Construcción</h2>
-                <p class="lead text-white-50 mb-4">
-                    Este módulo estará disponible en la <strong class="text-warning">Fase 2</strong> del proyecto.
-                </p>
-                <div class="alert alert-warning border-0 bg-warning bg-opacity-10 d-inline-block" role="alert">
-                    <i class="bi bi-calendar-event me-2"></i>
-                    <strong>Próximamente</strong>
+
+        <!-- SECCIÓN 1: TEORÍA -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-info bg-opacity-25 text-info">
+                    <i class="bi bi-book"></i>
                 </div>
-                <div class="mt-5">
-                    <a href="../index.html" class="btn btn-primary btn-lg">
-                        <i class="bi bi-house-door me-2"></i>Volver al Inicio
-                    </a>
+                <h2 class="h3 fw-bold mb-0 text-white">Fundamento Teórico</h2>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="step-card">
+                        <h5 class="text-info fw-bold"><i class="bi bi-lightbulb me-2"></i>La Idea Principal</h5>
+                        <p class="text-white-50">
+                            Si una integral contiene una función compuesta $f(g(x))$ multiplicada por la derivada de la parte interna $g'(x)$, podemos simplificarla definiendo una nueva variable $u = g(x)$.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="step-card">
+                        <h5 class="text-info fw-bold"><i class="bi bi-check2-circle me-2"></i>Condición de Éxito</h5>
+                        <p class="text-white-50">
+                            Para que la sustitución funcione, el diferencial $du$ debe aparecer completo en la integral (o poder ajustarse multiplicando/dividiendo por una constante).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formula-box" data-aos="zoom-in">
+                <h5 class="text-white mb-3"><i class="bi bi-magic me-2"></i>Fórmulas Maestras</h5>
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center mb-3 mb-md-0">
+                        <p class="text-white-50 small mb-1">Regla de la Potencia para Integrales</p>
+                        <div class="katex-display">$$ \int u^n \, du = \frac{u^{n+1}}{n+1} + C \quad (n \neq -1) $$</div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <p class="text-white-50 small mb-1">Cambio de Diferencial</p>
+                        <div class="katex-display">$$ u = g(x) \implies du = g'(x) \, dx $$</div>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- SECCIÓN 2: VISUALIZADOR INTERACTIVO -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-success bg-opacity-25 text-success">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Visualizador Interactivo</h2>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="step-card h-100">
+                        <h5 class="text-success fw-bold mb-3">Ejemplo: $\int x \sqrt{x^2+4} \, dx$</h5>
+                        <p class="text-white-50 small">
+                            Ajusta los límites de integración $a$ y $b$ para ver cómo el área bajo la curva $f(x)$ es equivalente al área bajo la curva transformada $g(u)$.
+                        </p>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-white-50 small">Límite inferior ($a$): <span id="val-a" class="text-info fw-bold">0</span></label>
+                            <input type="range" class="form-range" id="slider-a" min="-3" max="3" step="0.1" value="0">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-white-50 small">Límite superior ($b$): <span id="val-b" class="text-info fw-bold">2</span></label>
+                            <input type="range" class="form-range" id="slider-b" min="-2" max="4" step="0.1" value="2">
+                        </div>
+
+                        <div class="alert alert-info bg-opacity-10 border-0 text-info small">
+                            <i class="bi bi-info-circle me-1"></i>
+                            <strong>Sustitución:</strong> $u = x^2+4$, $du = 2x \, dx$
+                        </div>
+                        <div class="text-white small">
+                            <p class="mb-1">Valor de la integral:</p>
+                            <h4 class="text-info fw-bold" id="integral-result">0.000</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div id="plot-area"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: EJEMPLOS RESUELTOS (DIDÁCTICOS) -->
+        <section class="mb-5" data-aos="fade-up">
+            <div class="section-header d-flex align-items-center gap-3 mb-4">
+                <div class="section-icon bg-warning bg-opacity-25 text-warning">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <h2 class="h3 fw-bold mb-0 text-white">Ejemplos Resueltos Paso a Paso</h2>
+            </div>
+
+            <!-- Ejemplo 1 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">1</span>
+                    <h5 class="text-white mb-0">Ejemplo Básico: $\int 2x(x^2 + 1)^3 \, dx$</h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Elegir $u$</p>
+                        <p class="text-white-50 small">Identificamos la función interna de la potencia: $u = x^2 + 1$</p>
+                        
+                        <p class="text-info small fw-bold mb-1">PASO 2: Calcular $du$</p>
+                        <p class="text-white-50 small">Derivamos: $du = 2x \, dx$. ¡Coincide perfectamente con la integral!</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 3: Sustituir e Integrar</p>
+                        <div class="katex-display" style="font-size: 0.9em;">$$ \int u^3 \, du = \frac{u^4}{4} + C $$</div>
+                        <p class="text-info small fw-bold mb-1">PASO 4: Regresar a $x$</p>
+                        <div class="katex-display" style="font-size: 0.9em;">$$ \frac{(x^2+1)^4}{4} + C $$</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 2 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">2</span>
+                    <h5 class="text-white mb-0">Ejemplo Intermedio: $\int x \sqrt{x^2+4} \, dx$</h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Elegir $u$</p>
+                        <p class="text-white-50 small">$u = x^2 + 4 \implies du = 2x \, dx$</p>
+                        <p class="text-white-50 small">Despejamos para igualar la integral: $x \, dx = \frac{du}{2}$</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 2: Sustituir e Integrar</p>
+                        <div class="katex-display" style="font-size: 0.9em;">$$ \int \sqrt{u} \cdot \frac{du}{2} = \frac{1}{2} \int u^{1/2} \, du $$</div>
+                        <p class="text-info small fw-bold mb-1">PASO 3: Resultado Final</p>
+                        <div class="katex-display" style="font-size: 0.9em;">$$ \frac{1}{2} \cdot \frac{u^{3/2}}{3/2} + C = \frac{1}{3}(x^2+4)^{3/2} + C $$</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 3 -->
+            <div class="step-card">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="step-number">3</span>
+                    <h5 class="text-white mb-0">Ejemplo Avanzado (Ajuste): $\int (3x + 2)^4 \, dx$</h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 1: Elegir $u$</p>
+                        <p class="text-white-50 small">$u = 3x + 2 \implies du = 3 \, dx$</p>
+                        <p class="text-warning small"><i class="bi bi-exclamation-triangle me-1"></i> <strong>Nota:</strong> No hay $3$ en la integral, así que ajustamos: $dx = \frac{du}{3}$</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-info small fw-bold mb-1">PASO 2: Sustituir e Integrar</p>
+                        <div class="katex-display" style="font-size: 0.9em;">$$ \int u^4 \cdot \frac{du}{3} = \frac{1}{3} \int u^4 \, du $$</div>
+                        <p class="text-info small fw-bold mb-1">PASO 3: Resultado Final</p>
+                        <div class="katex-display" style="font-size: 0.9em;">$$ \frac{1}{3} \cdot \frac{u^5}{5} + C = \frac{(3x+2)^5}{15} + C $$</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
     </main>
 
-    <footer class="footer-custom mt-5 py-4">
-        <div class="container text-center">
-            <p class="text-white-50 small mb-0">© 2026 Universidad Tecnológica de Pereira · Cálculo Integral</p>
+    <!-- FOOTER -->
+    <footer class="footer-custom mt-5 py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-3 text-white">
+                        <i class="bi bi-calculator-fill text-primary me-2"></i>
+                        Módulo 7 · Sustitución y Potencias
+                    </h5>
+                    <p class="text-white-50 small mb-0">
+                        Plataforma educativa desarrollada como parte del parcial del curso de Matemáticas II.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Navegación</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="../index.html" class="text-decoration-none text-white-50">Inicio</a></li>
+                        <li><a href="modulo6.html" class="text-decoration-none text-white-50">Módulo Anterior</a></li>
+                        <li><a href="modulo8.html" class="text-decoration-none text-white-50">Módulo Siguiente</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3 text-white-50">Tecnologías</h6>
+                    <ul class="list-unstyled small">
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>KaTeX · Plotly.js</li>
+                        <li class="text-white-50"><i class="bi bi-check2 text-success me-2"></i>Bootstrap 5</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 opacity-25">
+            <div class="text-center text-white-50 small">
+                <p class="mb-0">© 2026 Universidad Tecnológica de Pereira · Matemáticas II</p>
+            </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="../js/main.js"></script>
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    
     <script>
+        // Inicializar AOS y KaTeX
         if (typeof AOS !== 'undefined') AOS.init({ duration: 700, once: true, offset: 50 });
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement !== 'undefined') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ]
+                });
+            }
+            initPlot();
+        });
+
+        // Lógica del Visualizador Interactivo (Actualizado para Ejemplo 2)
+        function initPlot() {
+            const sliderA = document.getElementById('slider-a');
+            const sliderB = document.getElementById('slider-b');
+            const valA = document.getElementById('val-a');
+            const valB = document.getElementById('val-b');
+            const resultDiv = document.getElementById('integral-result');
+
+            function updatePlot() {
+                let a = parseFloat(sliderA.value);
+                let b = parseFloat(sliderB.value);
+                
+                if (a >= b) { b = a + 0.1; sliderB.value = b; }
+                
+                valA.textContent = a.toFixed(1);
+                valB.textContent = b.toFixed(1);
+
+                // Función original f(x) = x * sqrt(x^2 + 4)
+                const xValues = [];
+                const yValues = [];
+                const xStart = Math.min(a, -3); 
+                const xEnd = Math.max(b, 3);
+                
+                for (let x = xStart; x <= xEnd; x += 0.05) {
+                    xValues.push(x);
+                    yValues.push(x * Math.sqrt(x**2 + 4));
+                }
+
+                // Área sombreada
+                const xFill = [];
+                const yFill = [];
+                for (let x = a; x <= b; x += 0.05) {
+                    xFill.push(x);
+                    yFill.push(x * Math.sqrt(x**2 + 4));
+                }
+
+                // Calcular integral exacta: F(x) = (1/3)*(x^2+4)^(3/2)
+                const F = (x) => (1/3) * Math.pow(x**2 + 4, 1.5);
+                const integralVal = F(b) - F(a);
+                resultDiv.textContent = integralVal.toFixed(4);
+
+                const trace1 = {
+                    x: xValues, y: yValues, mode: 'lines', name: 'f(x)',
+                    line: {color: '#0dcaf0', width: 3}
+                };
+                const trace2 = {
+                    x: xFill, y: yFill, mode: 'lines', fill: 'tozeroy', name: 'Área',
+                    fillcolor: 'rgba(13, 202, 240, 0.3)', line: {color: 'transparent'}
+                };
+
+                const layout = {
+                    paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+                    font: {color: '#adb5bd'}, margin: {t: 20, r: 20, b: 40, l: 50},
+                    xaxis: {title: 'x', gridcolor: 'rgba(255,255,255,0.1)', zerolinecolor: 'rgba(255,255,255,0.2)'},
+                    yaxis: {title: 'f(x)', gridcolor: 'rgba(255,255,255,0.1)', zerolinecolor: 'rgba(255,255,255,0.2)'},
+                    showlegend: false
+                };
+
+                Plotly.newPlot('plot-area', [trace2, trace1], layout, {responsive: true, displayModeBar: false});
+            }
+
+            sliderA.addEventListener('input', updatePlot);
+            sliderB.addEventListener('input', updatePlot);
+            updatePlot();
+        }
     </script>
 </body>
 </html>
