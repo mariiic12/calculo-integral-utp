@@ -99,7 +99,7 @@ No requiere compilación ni dependencias instalables:
 3. Prueba en local con Live Server.
 4. Haz commit descriptivo y abre un Pull Request.
 
-## 🤖 Uso de inteligencia artificial (documentado)
+## 🤖 Uso de inteligencia artificial
 
 - Se utilizó **Qwen Coder (Qwen Studio)** como asistente de programación para: arquitectura de módulos, generación y depuración de visualizadores Plotly.js, y resolución de conflictos de renderizado de KaTeX.
 
