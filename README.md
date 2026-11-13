@@ -20,7 +20,7 @@ La plataforma articula los contenidos del curso (métodos numéricos, técnicas 
 - ✍️ **Fundamento teórico** con fórmulas renderizadas en KaTeX.
 - 🎛️ **Visualizador interactivo** (Plotly.js 2D y 3D) con panel de controles: deslizadores, interruptores, animaciones, rotación de cámara y exportación de gráficas a PNG.
 - 🧪 **Verificación numérica en vivo**: los chips comparan el valor exacto de la integral con aproximaciones (Riemann, Simpson, suma de rebanadas) para que el estudiante *vea* la convergencia.
-- 📚 **Ejemplos didácticos resueltos paso a paso** (distintos de los ejercicios del taller manual, que se resuelven a mano).
+- 📚 **Ejemplos didácticos resueltos paso a paso**.
 
 ## 🗂️ Estructura del proyecto
 
@@ -109,4 +109,4 @@ Desarrollado por **Marie Castañeda Crespo** como parte del curso de Matemática
 
 ---
 
-© 2026 Universidad Tecnológica de Pereira · Departamento de Matemáticas · Facultad de Ciencias Básicas
+© 2026 Universidad Tecnológica de Pereira
